@@ -382,101 +382,115 @@ function computeProgress(completions) {
   return p;
 }
 
-// ── Body Map (anatomical muscle map with 3D shading) ──
+// ── Body Map (detailed anatomical muscle map) ──
 function BodyMap({ intensities={} }) {
-  const opa = g => { const i=intensities[g]||0; return i===0?0:0.28+i*0.72; };
-  const bodySil = (
-    <g fill="currentColor" opacity="0.13">
-      <ellipse cx="60" cy="17" rx="13" ry="15"/>
-      <path d="M54 30 L60 32 L66 30 L67 38 L60 40 L53 38Z"/>
-      <path d="M32 40 C26 44,20 54,18 66 L14 106 C13 118,15 130,20 134 L35 138 L85 138 L100 134 C105 130,107 118,106 106 L102 66 C100 54,94 44,88 40 L67 38 L60 40 L53 38Z"/>
-      <path d="M13 44 C9 52,7 66,7 80 L7 112 C7 122,9 130,13 134 L22 136 L26 70 L20 46Z"/>
-      <path d="M107 44 C111 52,113 66,113 80 L113 112 C113 122,111 130,107 134 L98 136 L94 70 L100 46Z"/>
-      <path d="M6 114 C5 126,5 138,7 150 L10 170 L24 166 L22 132 L16 116Z"/>
-      <path d="M114 114 C115 126,115 138,113 150 L110 170 L96 166 L98 132 L104 116Z"/>
-      <path d="M19 136 L52 138 L54 200 L40 210 L22 202Z"/>
-      <path d="M101 136 L68 138 L66 200 L80 210 L98 202Z"/>
-      <path d="M21 204 L42 204 L44 246 L38 256 L22 248Z"/>
-      <path d="M99 204 L78 204 L76 246 L82 256 L98 248Z"/>
-      <path d="M21 248 L39 248 L39 278 L30 284 L20 276Z"/>
-      <path d="M99 248 L81 248 L81 278 L90 284 L100 276Z"/>
+  const opa = g => { const i=intensities[g]||0; return i===0?0:0.3+i*0.7; };
+  const sil = (
+    <g fill="currentColor" opacity="0.11">
+      <ellipse cx="60" cy="16" rx="12" ry="14"/>
+      <path d="M54 28 Q60 34 66 28 L67 37 Q60 40 53 37Z"/>
+      <path d="M33 40 C27 46,21 56,19 68 L15 108 C14 120,16 132,21 136 L35 139 L85 139 L99 136 C104 132,106 120,105 108 L101 68 C99 56,93 46,87 40 L67 37 Q60 40 53 37Z"/>
+      <path d="M12 45 C8 54,7 68,7 82 L7 114 C7 124,9 132,13 136 L22 138 L25 72 L19 47Z"/>
+      <path d="M108 45 C112 54,113 68,113 82 L113 114 C113 124,111 132,107 136 L98 138 L95 72 L101 47Z"/>
+      <path d="M6 116 C5 128,5 140,7 152 L10 172 L24 168 L22 134 L15 118Z"/>
+      <path d="M114 116 C115 128,115 140,113 152 L110 172 L96 168 L98 134 L105 118Z"/>
+      <path d="M20 137 L53 139 L55 201 L40 211 L22 203Z"/>
+      <path d="M100 137 L67 139 L65 201 L80 211 L98 203Z"/>
+      <path d="M21 206 L42 206 L44 248 L38 258 L22 250Z"/>
+      <path d="M99 206 L78 206 L76 248 L82 258 L98 250Z"/>
+      <path d="M21 250 L40 250 L40 280 L30 286 L20 278Z"/>
+      <path d="M99 250 L80 250 L80 280 L90 286 L100 278Z"/>
     </g>
   );
   const FrontSVG = () => (
-    <svg viewBox="0 0 120 290" width={130} height={190} style={{display:'block',color:'var(--ink)'}}>
+    <svg viewBox="0 0 120 290" width={128} height={192} style={{display:'block',color:'var(--ink)'}}>
       <defs>
         {MUSCLE_GROUPS.map(g=>(
-          <radialGradient key={g} id={`rgf-${g}`} cx="50%" cy="38%" r="62%" fx="50%" fy="28%">
-            <stop offset="0%" stopColor={MG_COLORS[g]} stopOpacity="0.95"/>
-            <stop offset="70%" stopColor={MG_COLORS[g]} stopOpacity="0.55"/>
-            <stop offset="100%" stopColor={MG_COLORS[g]} stopOpacity="0.15"/>
+          <radialGradient key={g} id={`rgf-${g}`} cx="50%" cy="35%" r="65%" fx="50%" fy="22%">
+            <stop offset="0%" stopColor={MG_COLORS[g]} stopOpacity="1.0"/>
+            <stop offset="60%" stopColor={MG_COLORS[g]} stopOpacity="0.65"/>
+            <stop offset="100%" stopColor={MG_COLORS[g]} stopOpacity="0.12"/>
           </radialGradient>
         ))}
       </defs>
-      {bodySil}
+      {sil}
       {opa('shoulders')>0&&<g opacity={opa('shoulders')}>
-        <ellipse cx="16" cy="56" rx="11" ry="17" fill="url(#rgf-shoulders)"/>
-        <ellipse cx="104" cy="56" rx="11" ry="17" fill="url(#rgf-shoulders)"/>
+        <path d="M14 44 C9 50,8 60,10 72 L22 70 L20 44Z" fill="url(#rgf-shoulders)"/>
+        <path d="M106 44 C111 50,112 60,110 72 L98 70 L100 44Z" fill="url(#rgf-shoulders)"/>
       </g>}
       {opa('chest')>0&&<g opacity={opa('chest')}>
-        <path d="M34 44 L58 54 L58 88 L30 82 Z" fill="url(#rgf-chest)"/>
-        <path d="M86 44 L62 54 L62 88 L90 82 Z" fill="url(#rgf-chest)"/>
-      </g>}
-      {opa('abs')>0&&<g opacity={opa('abs')}>
-        <rect x="44" y="92" width="13" height="12" rx="4" fill="url(#rgf-abs)"/>
-        <rect x="63" y="92" width="13" height="12" rx="4" fill="url(#rgf-abs)"/>
-        <rect x="44" y="108" width="13" height="11" rx="4" fill="url(#rgf-abs)"/>
-        <rect x="63" y="108" width="13" height="11" rx="4" fill="url(#rgf-abs)"/>
-        <rect x="44" y="123" width="13" height="11" rx="4" fill="url(#rgf-abs)"/>
-        <rect x="63" y="123" width="13" height="11" rx="4" fill="url(#rgf-abs)"/>
+        <path d="M33 45 C28 53,26 66,30 78 L57 84 L57 62 C47 59,38 53 33 45Z" fill="url(#rgf-chest)"/>
+        <path d="M87 45 C92 53,94 66,90 78 L63 84 L63 62 C73 59,82 53 87 45Z" fill="url(#rgf-chest)"/>
       </g>}
       {opa('arms')>0&&<g opacity={opa('arms')}>
-        <path d="M9 48 L21 46 L20 104 L8 106Z" fill="url(#rgf-arms)"/>
-        <path d="M111 48 L99 46 L100 104 L112 106Z" fill="url(#rgf-arms)"/>
+        <path d="M9 56 C7 68,7 82,9 96 L21 94 C19 82,19 66,20 56Z" fill="url(#rgf-arms)"/>
+        <path d="M111 56 C113 68,113 82,111 96 L99 94 C101 82,101 66,100 56Z" fill="url(#rgf-arms)"/>
+        <path d="M7 118 C6 128,6 140,8 152 L20 150 L20 116Z" fill="url(#rgf-arms)" opacity="0.55"/>
+        <path d="M113 118 C114 128,114 140,112 152 L100 150 L100 116Z" fill="url(#rgf-arms)" opacity="0.55"/>
+      </g>}
+      {opa('abs')>0&&<g opacity={opa('abs')}>
+        <rect x="44" y="90" width="13" height="12" rx="4" fill="url(#rgf-abs)"/>
+        <rect x="63" y="90" width="13" height="12" rx="4" fill="url(#rgf-abs)"/>
+        <rect x="44" y="106" width="13" height="11" rx="4" fill="url(#rgf-abs)"/>
+        <rect x="63" y="106" width="13" height="11" rx="4" fill="url(#rgf-abs)"/>
+        <rect x="44" y="121" width="13" height="11" rx="4" fill="url(#rgf-abs)"/>
+        <rect x="63" y="121" width="13" height="11" rx="4" fill="url(#rgf-abs)"/>
+        <path d="M30 96 C28 106,28 118,31 130 L44 128 L44 94Z" fill="url(#rgf-abs)" opacity="0.5"/>
+        <path d="M90 96 C92 106,92 118,89 130 L76 128 L76 94Z" fill="url(#rgf-abs)" opacity="0.5"/>
       </g>}
       {opa('legs')>0&&<g opacity={opa('legs')}>
-        <path d="M22 140 L52 140 L54 198 L38 206 L20 198Z" fill="url(#rgf-legs)"/>
-        <path d="M98 140 L68 140 L66 198 L82 206 L100 198Z" fill="url(#rgf-legs)"/>
-        <path d="M21 204 L42 204 L44 244 L36 252 L22 246Z" fill="url(#rgf-legs)" opacity="0.8"/>
-        <path d="M99 204 L78 204 L76 244 L84 252 L98 246Z" fill="url(#rgf-legs)" opacity="0.8"/>
+        <path d="M22 141 L52 141 L54 197 L38 205 L20 197Z" fill="url(#rgf-legs)"/>
+        <path d="M98 141 L68 141 L66 197 L82 205 L100 197Z" fill="url(#rgf-legs)"/>
+        <path d="M34 188 C28 196,32 210 44 203 L51 196Z" fill="url(#rgf-legs)" opacity="0.85"/>
+        <path d="M86 188 C92 196,88 210 76 203 L69 196Z" fill="url(#rgf-legs)" opacity="0.85"/>
+        <path d="M22 210 L34 210 L32 250 L22 246Z" fill="url(#rgf-legs)" opacity="0.45"/>
+        <path d="M98 210 L86 210 L88 250 L98 246Z" fill="url(#rgf-legs)" opacity="0.45"/>
       </g>}
     </svg>
   );
   const BackSVG = () => (
-    <svg viewBox="0 0 120 290" width={130} height={190} style={{display:'block',color:'var(--ink)'}}>
+    <svg viewBox="0 0 120 290" width={128} height={192} style={{display:'block',color:'var(--ink)'}}>
       <defs>
         {MUSCLE_GROUPS.map(g=>(
-          <radialGradient key={g} id={`rgb-${g}`} cx="50%" cy="38%" r="62%" fx="50%" fy="28%">
-            <stop offset="0%" stopColor={MG_COLORS[g]} stopOpacity="0.95"/>
-            <stop offset="70%" stopColor={MG_COLORS[g]} stopOpacity="0.55"/>
-            <stop offset="100%" stopColor={MG_COLORS[g]} stopOpacity="0.15"/>
+          <radialGradient key={g} id={`rgb-${g}`} cx="50%" cy="35%" r="65%" fx="50%" fy="22%">
+            <stop offset="0%" stopColor={MG_COLORS[g]} stopOpacity="1.0"/>
+            <stop offset="60%" stopColor={MG_COLORS[g]} stopOpacity="0.65"/>
+            <stop offset="100%" stopColor={MG_COLORS[g]} stopOpacity="0.12"/>
           </radialGradient>
         ))}
       </defs>
-      {bodySil}
+      {sil}
       {opa('back')>0&&<g opacity={opa('back')}>
-        <path d="M34 42 L60 52 L86 42 L90 72 L60 78 L30 72Z" fill="url(#rgb-back)"/>
-        <path d="M20 80 L54 82 L56 132 L34 140 L18 128Z" fill="url(#rgb-back)"/>
-        <path d="M100 80 L66 82 L64 132 L86 140 L102 128Z" fill="url(#rgb-back)"/>
+        <path d="M38 42 L60 52 L82 42 L88 68 L60 76 L32 68Z" fill="url(#rgb-back)"/>
+        <path d="M21 84 C16 96,14 112,18 132 L36 137 L40 98 L23 84Z" fill="url(#rgb-back)"/>
+        <path d="M99 84 C104 96,106 112,102 132 L84 137 L80 98 L97 84Z" fill="url(#rgb-back)"/>
+        <rect x="52" y="82" width="6" height="52" rx="3" fill="url(#rgb-back)" opacity="0.7"/>
+        <rect x="62" y="82" width="6" height="52" rx="3" fill="url(#rgb-back)" opacity="0.7"/>
       </g>}
-      {opa('shoulders')>0&&<g opacity={opa('shoulders')*0.75}>
-        <ellipse cx="16" cy="56" rx="11" ry="17" fill="url(#rgb-shoulders)"/>
-        <ellipse cx="104" cy="56" rx="11" ry="17" fill="url(#rgb-shoulders)"/>
+      {opa('shoulders')>0&&<g opacity={opa('shoulders')}>
+        <path d="M14 44 C9 50,8 62,11 74 L23 70 L20 44Z" fill="url(#rgb-shoulders)"/>
+        <path d="M106 44 C111 50,112 62,109 74 L97 70 L100 44Z" fill="url(#rgb-shoulders)"/>
       </g>}
-      {opa('arms')>0&&<g opacity={opa('arms')*0.8}>
-        <path d="M9 48 L21 46 L20 104 L8 106Z" fill="url(#rgb-arms)"/>
-        <path d="M111 48 L99 46 L100 104 L112 106Z" fill="url(#rgb-arms)"/>
+      {opa('arms')>0&&<g opacity={opa('arms')}>
+        <path d="M8 50 C6 62,6 80,8 100 L21 98 C19 80,19 62,19 50Z" fill="url(#rgb-arms)"/>
+        <path d="M112 50 C114 62,114 80,112 100 L99 98 C101 80,101 62,101 50Z" fill="url(#rgb-arms)"/>
+        <path d="M7 118 C6 128,6 140,8 152 L20 150 L20 116Z" fill="url(#rgb-arms)" opacity="0.55"/>
+        <path d="M113 118 C114 128,114 140,112 152 L100 150 L100 116Z" fill="url(#rgb-arms)" opacity="0.55"/>
       </g>}
       {opa('legs')>0&&<g opacity={opa('legs')}>
-        <path d="M22 140 L52 140 L54 196 L38 204 L20 196Z" fill="url(#rgb-legs)"/>
-        <path d="M98 140 L68 140 L66 196 L82 204 L100 196Z" fill="url(#rgb-legs)"/>
-        <path d="M21 200 L42 200 L44 244 L36 252 L22 246Z" fill="url(#rgb-legs)" opacity="0.85"/>
-        <path d="M99 200 L78 200 L76 244 L84 252 L98 246Z" fill="url(#rgb-legs)" opacity="0.85"/>
+        <path d="M22 139 L54 139 L56 180 L38 190 L20 180Z" fill="url(#rgb-legs)"/>
+        <path d="M98 139 L66 139 L64 180 L82 190 L100 180Z" fill="url(#rgb-legs)"/>
+        <path d="M22 186 L52 186 L52 246 L36 254 L22 246Z" fill="url(#rgb-legs)" opacity="0.85"/>
+        <path d="M98 186 L68 186 L68 246 L84 254 L98 246Z" fill="url(#rgb-legs)" opacity="0.85"/>
+        <path d="M22 250 L36 250 L34 278 L22 274Z" fill="url(#rgb-legs)" opacity="0.7"/>
+        <path d="M38 250 L43 250 L42 276 L38 276Z" fill="url(#rgb-legs)" opacity="0.45"/>
+        <path d="M98 250 L84 250 L86 278 L98 274Z" fill="url(#rgb-legs)" opacity="0.7"/>
+        <path d="M82 250 L77 250 L78 276 L82 276Z" fill="url(#rgb-legs)" opacity="0.45"/>
       </g>}
     </svg>
   );
   return (
-    <div style={{display:'flex',gap:12,justifyContent:'center'}}>
+    <div style={{display:'flex',gap:16,justifyContent:'center',alignItems:'flex-start'}}>
       <div style={{textAlign:'center'}}>
         <FrontSVG/>
         <div style={{fontFamily:'var(--font-mono)',fontSize:7.5,letterSpacing:0.18,textTransform:'uppercase',color:'var(--ink-60)',marginTop:4}}>Front</div>
@@ -968,18 +982,58 @@ function AnalyticsScreen({ state, navigate }) {
   const filteredHistory = weekHistory.filter(w => w.completedAt >= cutoff);
   const currentComp = period==='week' ? (completions[activeSplit]||[]) : [];
   const allComp = [...filteredHistory.flatMap(w=>w.completions), ...currentComp];
+
+  // Muscle heat map
   const muscleVol = {}; MUSCLE_GROUPS.forEach(g=>muscleVol[g]=0);
   allComp.filter(c=>c.slot<1000).forEach(c=>{ const ex=exerciseById(c.id); if(ex.group) muscleVol[ex.group]++; });
   const maxVol = Math.max(1,...Object.values(muscleVol));
   const bodyIntensity = {}; MUSCLE_GROUPS.forEach(g=>bodyIntensity[g]=muscleVol[g]/maxVol);
+
+  // Exercise frequency
   const exerciseFreq = {};
   allComp.filter(c=>c.slot<1000).forEach(c=>{ exerciseFreq[c.id]=(exerciseFreq[c.id]||0)+1; });
   const topEx = Object.entries(exerciseFreq).sort((a,b)=>b[1]-a[1]).slice(0,8);
   const recentWeeks = [...weekHistory].reverse().slice(0,8);
-  const totalEx = weekHistory.reduce((s,w)=>s+w.completions.filter(c=>c.slot<1000).length,0);
-  const splitCounts = {}; weekHistory.forEach(w=>splitCounts[w.split]=(splitCounts[w.split]||0)+1);
-  const favEntry = Object.entries(splitCounts).sort((a,b)=>b[1]-a[1])[0];
-  const favLabel = favEntry ? (SPLITS[favEntry[0]]?.label||"Custom").split("/")[0].trim() : "—";
+
+  // ── Hevy-style analytics ──
+  const totalVolume = weekHistory.reduce((tot, w) =>
+    tot + Object.values(w.detailedSets||{}).reduce((s, entries) =>
+      s + entries.reduce((es, e) => es + (e.reps||0)*(e.kg||0), 0), 0), 0);
+
+  const sortedW = [...weekHistory].sort((a,b) => b.completedAt - a.completedAt);
+  let streak = sortedW.length > 0 ? 1 : 0;
+  for (let i = 1; i < sortedW.length; i++) {
+    if (sortedW[i-1].completedAt - sortedW[i].completedAt <= 14*DAY) streak++;
+    else break;
+  }
+
+  const totalSets = weekHistory.reduce((tot, w) =>
+    tot + Object.values(w.detailedSets||{}).reduce((s, entries) => s + entries.length, 0), 0);
+
+  const weeklyVols = [...weekHistory].sort((a,b) => a.completedAt-b.completedAt).slice(-8).map(w => ({
+    label: new Date(w.completedAt).toLocaleDateString("en-AU",{day:"numeric",month:"short"}),
+    v: Object.values(w.detailedSets||{}).reduce((s, entries) =>
+      s + entries.reduce((es, e) => es + (e.reps||0)*(e.kg||0), 0), 0)
+  }));
+  const maxWV = Math.max(1, ...weeklyVols.map(w=>w.v));
+
+  // Personal records: max kg per exercise from all history
+  const prMap = {};
+  weekHistory.forEach(w => {
+    const ds = w.detailedSets||{};
+    const slotMap = {};
+    (w.completions||[]).forEach(c => { slotMap[`${c.day}_${c.slot}`] = c.id; });
+    Object.entries(ds).forEach(([key, entries]) => {
+      const exId = slotMap[key]; if (!exId) return;
+      entries.forEach(e => {
+        if ((e.kg||0) > 0 && (!prMap[exId] || e.kg > prMap[exId].kg))
+          prMap[exId] = { kg: e.kg, date: new Date(w.completedAt) };
+      });
+    });
+  });
+  const topPRs = Object.entries(prMap).sort((a,b) => b[1].kg - a[1].kg).slice(0, 6);
+
+  const volDisplay = totalVolume >= 1000 ? `${(totalVolume/1000).toFixed(1)}k` : `${Math.round(totalVolume)}`;
   const hasData = allComp.filter(c=>c.slot<1000).length > 0;
 
   return (
@@ -995,11 +1049,19 @@ function AnalyticsScreen({ state, navigate }) {
           <button key={k} onClick={()=>setPeriod(k)} style={{ flex:1, fontFamily:"var(--font-mono)", fontSize:9.5, letterSpacing:0.1, textTransform:"uppercase", padding:"7px 4px", background:period===k?"var(--ink)":"transparent", color:period===k?"var(--paper)":"var(--ink)", border:"1px solid var(--ink)", cursor:"pointer" }}>{l}</button>
         ))}
       </div>
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginTop:18 }}>
-        {[{ label:"Weeks", v:weekHistory.length },{ label:"Exercises", v:totalEx },{ label:"Best Split", v:favLabel||"—" }].map(s=>(
-          <div key={s.label} style={{ border:"1px solid var(--rule)", padding:"12px 10px", textAlign:"center" }}>
-            <div style={{ fontFamily:"var(--font-display)", fontSize:22, letterSpacing:-0.05, lineHeight:1 }}>{s.v}</div>
-            <div style={{ fontFamily:"var(--font-mono)", fontSize:8.5, letterSpacing:0.14, textTransform:"uppercase", color:"var(--ink-60)", marginTop:4 }}>{s.label}</div>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginTop:18 }}>
+        {[
+          { label:"Volume", v:volDisplay, unit:"kg" },
+          { label:"Streak", v:streak, unit:"wks" },
+          { label:"Workouts", v:weekHistory.length, unit:null },
+          { label:"Sets Logged", v:totalSets, unit:null }
+        ].map(s=>(
+          <div key={s.label} style={{ border:"1px solid var(--rule)", padding:"12px 14px" }}>
+            <div style={{ display:"flex", alignItems:"baseline", gap:4 }}>
+              <div style={{ fontFamily:"var(--font-display)", fontSize:28, letterSpacing:-0.04, lineHeight:1 }}>{s.v}</div>
+              {s.unit&&<div style={{ fontFamily:"var(--font-mono)", fontSize:9, letterSpacing:0.1, textTransform:"uppercase", color:"var(--ink-60)" }}>{s.unit}</div>}
+            </div>
+            <div style={{ fontFamily:"var(--font-mono)", fontSize:8.5, letterSpacing:0.14, textTransform:"uppercase", color:"var(--ink-60)", marginTop:5 }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -1009,7 +1071,52 @@ function AnalyticsScreen({ state, navigate }) {
       {hasData ? <BodyMap intensities={bodyIntensity}/> : (
         <div style={{ textAlign:"center", padding:"24px 0", fontFamily:"var(--font-mono)", fontSize:10, color:"var(--ink-60)", letterSpacing:0.12 }}>Train to see your muscle heat map</div>
       )}
-      <Rule label="Volume"/>
+      <Rule label="Weekly Volume"/>
+      {weeklyVols.length > 0 ? (
+        <div>
+          <div style={{ display:"flex", alignItems:"flex-end", gap:3, height:68 }}>
+            {weeklyVols.map((wv,i) => {
+              const pct = wv.v / maxWV;
+              return (
+                <div key={i} style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center" }}>
+                  <div style={{ width:"100%", background:"var(--ink)", opacity:0.35+pct*0.65, height:Math.max(4, Math.round(pct*56)), transition:"height 500ms ease", borderRadius:"2px 2px 0 0" }}/>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ display:"flex", gap:3, marginTop:5 }}>
+            {weeklyVols.map((wv,i) => (
+              <div key={i} style={{ flex:1, textAlign:"center", fontFamily:"var(--font-mono)", fontSize:7, color:"var(--ink-60)", letterSpacing:0.05 }}>{wv.label}</div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div style={{ textAlign:"center", padding:"14px 0", fontFamily:"var(--font-mono)", fontSize:10, color:"var(--ink-60)" }}>Log weight in sets to see trend</div>
+      )}
+      <Rule label="Personal Records"/>
+      {topPRs.length > 0 ? (
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
+          {topPRs.map(([id,pr]) => {
+            const ex = exerciseById(id);
+            return (
+              <div key={id} style={{ border:"1px solid var(--rule)", padding:"10px 12px" }}>
+                <div style={{ fontFamily:"var(--font-mono)", fontSize:7.5, letterSpacing:0.12, textTransform:"uppercase", color:MG_COLORS[ex.group||'abs'], marginBottom:4 }}>{MG_LABEL[ex.group||'abs']}</div>
+                <div style={{ fontFamily:"var(--font-body)", fontSize:12, lineHeight:1.25 }}>{ex.name}</div>
+                <div style={{ display:"flex", alignItems:"baseline", gap:3, marginTop:5 }}>
+                  <span style={{ fontFamily:"var(--font-display)", fontSize:24, letterSpacing:-0.03, lineHeight:1 }}>{pr.kg}</span>
+                  <span style={{ fontFamily:"var(--font-mono)", fontSize:9.5, color:"var(--ink-60)" }}>kg</span>
+                </div>
+                <div style={{ fontFamily:"var(--font-mono)", fontSize:7.5, color:"var(--ink-60)", marginTop:2, letterSpacing:0.1, textTransform:"uppercase" }}>
+                  {pr.date.toLocaleDateString("en-AU",{day:"numeric",month:"short",year:"2-digit"})}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div style={{ textAlign:"center", padding:"14px 0", fontFamily:"var(--font-mono)", fontSize:10, color:"var(--ink-60)" }}>Log weight in sets to unlock PRs</div>
+      )}
+      <Rule label="Volume by Group"/>
       <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
         {MUSCLE_GROUPS.map(g=>(
           <div key={g}>
