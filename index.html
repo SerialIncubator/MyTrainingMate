@@ -254,6 +254,7 @@ function ExerciseRow({ ex, checked, onToggle, dashed=false, isMain=false, setsDo
     const r = parseInt(repInput), k = parseFloat(kgInput);
     if (!r || !k || isNaN(r) || isNaN(k)) return;
     onAddSetEntry && onAddSetEntry({ reps:r, kg:k });
+    if (checked) onToggle && onToggle();
   };
   return (
     <div style={{ borderTop: dashed ? "1px dashed var(--rule)" : "1px solid var(--rule)", padding:"11px 0 8px" }}>
@@ -286,8 +287,11 @@ function ExerciseRow({ ex, checked, onToggle, dashed=false, isMain=false, setsDo
         <div style={{ marginTop:10, paddingLeft:34 }}>
           {detailedEntries.map((e, i) => (
             <div key={i} style={{ display:"flex", alignItems:"center", gap:7, marginBottom:5 }}>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" fill="var(--success)" opacity="0.18"/><path d="M4 7.5l2 2 4-4" stroke="var(--success)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
-              <span style={{ fontFamily:"var(--font-mono)", fontSize:11, color:"var(--success)", fontVariantNumeric:"tabular-nums" }}>Set {i+1} · {e.reps} reps × {e.kg} kg</span>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <circle cx="7" cy="7" r="6" fill={checked ? "var(--ink-30)" : "var(--success)"} opacity="0.18"/>
+                <path d="M4 7.5l2 2 4-4" stroke={checked ? "var(--ink-30)" : "var(--success)"} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <span style={{ fontFamily:"var(--font-mono)", fontSize:11, color: checked ? "var(--ink-60)" : "var(--success)", fontVariantNumeric:"tabular-nums" }}>Set {i+1} · {e.reps} reps × {e.kg} kg</span>
             </div>
           ))}
           <div style={{ display:"flex", gap:6, alignItems:"center", marginTop:4 }}>
