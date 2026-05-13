@@ -255,6 +255,7 @@ function ExerciseRow({ ex, checked, onToggle, dashed=false, isMain=false, setsDo
     const k = parseFloat(kgInput.replace(',', '.'));
     if (!r || isNaN(r) || isNaN(k) || k <= 0) return;
     onAddSetEntry && onAddSetEntry({ reps:r, kg:k });
+    setKgInput("");
     if (checked) onToggle && onToggle();
   };
   return (
