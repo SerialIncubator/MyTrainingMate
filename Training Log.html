@@ -1237,130 +1237,150 @@ function AnalyticsScreen({ state, navigate, setShowPaywall }) {
 }
 
 function ProfileScreen({ state, dispatch, navigate }) {
-  const { measurements={}, detailedMode, user, isPro, planType='free' } = state;
+  const { measurements={}, detailedMode, user, isPro, planType='free', weekHistory=[], activeSplit, detailedSets: stateDS={} } = state;
+  const [showSub, setShowSub] = useState(false);
+  const [showMeasures, setShowMeasures] = useState(false);
+
+  const totalWeeks = weekHistory.length;
+  const totalSets = weekHistory.reduce((t, w) => t + Object.values(w.detailedSets||{}).reduce((s, e) => s + e.length, 0), 0)
+    + Object.values(stateDS[activeSplit]||{}).reduce((s, e) => s + e.length, 0);
+
   const MEASURES = [
     { key:"weight_kg", label:"Weight", unit:"kg" },
     { key:"height_cm", label:"Height", unit:"cm" },
-    { key:"body_fat", label:"Body Fat", unit:"%" },
-    { key:"chest_cm", label:"Chest", unit:"cm" },
-    { key:"waist_cm", label:"Waist", unit:"cm" },
-    { key:"hip_cm", label:"Hip", unit:"cm" },
-    { key:"arm_cm", label:"Arm", unit:"cm" },
-    { key:"thigh_cm", label:"Thigh", unit:"cm" },
-    { key:"calf_cm", label:"Calf", unit:"cm" },
+    { key:"body_fat",  label:"Body Fat", unit:"%" },
+    { key:"chest_cm",  label:"Chest",   unit:"cm" },
+    { key:"waist_cm",  label:"Waist",   unit:"cm" },
+    { key:"hip_cm",    label:"Hip",     unit:"cm" },
+    { key:"arm_cm",    label:"Arm",     unit:"cm" },
+    { key:"thigh_cm",  label:"Thigh",   unit:"cm" },
+    { key:"calf_cm",   label:"Calf",    unit:"cm" },
   ];
   const handleExport = () => {
-    const json = JSON.stringify(state, null, 2);
-    const blob = new Blob([json], { type:"application/json" });
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type:"application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url; a.download = `training-log-${new Date().toISOString().slice(0,10)}.json`; a.click();
+    a.href = url; a.download = `mtm-${new Date().toISOString().slice(0,10)}.json`; a.click();
     URL.revokeObjectURL(url);
   };
-  return (
-    <div style={{ padding:"8px 24px 120px", color:"var(--ink)" }}>
-      <div style={{ paddingTop:8 }}>
-        <div style={{ fontFamily:"var(--font-mono)", fontSize:10, letterSpacing:0.18, textTransform:"uppercase", color:"var(--ink-60)" }}>Your data</div>
-        <div style={{ fontFamily:"var(--font-display)", fontSize:42, lineHeight:0.95, letterSpacing:-0.035, marginTop:10 }}><span style={{ fontStyle:"italic" }}>Profile</span></div>
-      </div>
-      {user ? (
-        <>
-          {/* User card */}
-          <div style={{ marginTop:20, padding:"16px", border:"1px solid var(--rule)" }}>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
-              <div>
-                <div style={{ fontFamily:"var(--font-display)", fontSize:22, letterSpacing:-0.1 }}>{user.name}</div>
-                <div style={{ fontFamily:"var(--font-mono)", fontSize:9, color:"var(--ink-60)", marginTop:3, letterSpacing:0.1, textTransform:"uppercase" }}>{user.email}</div>
-                {(user.goal || user.experience) && (
-                  <div style={{ fontFamily:"var(--font-mono)", fontSize:9, color:"var(--ink-60)", marginTop:2, letterSpacing:0.1, textTransform:"uppercase" }}>
-                    {[user.goal, user.experience, user.daysPerWeek ? user.daysPerWeek+" days/wk" : null].filter(Boolean).join(" · ")}
-                  </div>
-                )}
-              </div>
-              <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:8 }}>
-                <span style={{ fontFamily:"var(--font-mono)", fontSize:8.5, letterSpacing:0.14, textTransform:"uppercase", padding:"3px 9px", background: isPro ? "var(--accent)" : "var(--rule)", color: isPro ? "#fff" : "var(--ink-60)" }}>{isPro ? "Pro · "+planType.charAt(0).toUpperCase()+planType.slice(1) : "Free"}</span>
-                <button onClick={()=>dispatch({type:"SIGN_OUT"})} style={{ fontFamily:"var(--font-mono)", fontSize:9, letterSpacing:0.12, textTransform:"uppercase", padding:"6px 10px", background:"transparent", color:"var(--ink-60)", border:"1px solid var(--rule)", cursor:"pointer" }}>Sign Out</button>
-              </div>
-            </div>
-          </div>
 
-          {/* Subscription */}
-          <Rule label="Subscription"/>
-          <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:8 }}>
-            {/* Free */}
-            <button onClick={()=>dispatch({type:"SET_PLAN", planType:"free"})}
-              style={{ border: planType==="free" ? "2px solid var(--ink)" : "1px solid var(--rule)", padding:"14px 16px", background: planType==="free" ? "var(--ink)" : "transparent", color: planType==="free" ? "var(--paper)" : "var(--ink)", cursor:"pointer", textAlign:"left", transition:"all 160ms" }}>
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-                <div style={{ fontFamily:"var(--font-display)", fontSize:17, letterSpacing:-0.1 }}>Free</div>
-                {planType==="free" && <span style={{ fontFamily:"var(--font-mono)", fontSize:8.5, letterSpacing:0.12, textTransform:"uppercase", opacity:0.65 }}>Current</span>}
-              </div>
-              <div style={{ fontFamily:"var(--font-mono)", fontSize:9, opacity:0.6, marginTop:3, letterSpacing:0.08 }}>Basic tracking · No analytics</div>
-            </button>
-            {/* Monthly */}
-            <button onClick={()=>{ dispatch({type:"SET_PLAN", planType:"monthly"}); window.open(STRIPE_MONTHLY,"_blank"); }}
-              style={{ border: planType==="monthly" ? "2px solid var(--ink)" : "1px solid var(--rule)", padding:"14px 16px", background: planType==="monthly" ? "var(--ink)" : "transparent", color: planType==="monthly" ? "var(--paper)" : "var(--ink)", cursor:"pointer", textAlign:"left", transition:"all 160ms" }}>
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline" }}>
-                <div style={{ fontFamily:"var(--font-display)", fontSize:17, letterSpacing:-0.1 }}>Monthly</div>
-                <div><span style={{ fontFamily:"var(--font-display)", fontSize:18, letterSpacing:-0.05 }}>$0.99</span><span style={{ fontFamily:"var(--font-mono)", fontSize:9, opacity:0.6, marginLeft:4 }}>AUD / mo</span></div>
-              </div>
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginTop:3 }}>
-                <div style={{ fontFamily:"var(--font-mono)", fontSize:9, opacity:0.6, letterSpacing:0.08 }}>All Pro features · Cancel anytime</div>
-                {planType==="monthly" && <span style={{ fontFamily:"var(--font-mono)", fontSize:8.5, letterSpacing:0.12, textTransform:"uppercase", opacity:0.65 }}>Current</span>}
-              </div>
-            </button>
-            {/* Yearly */}
-            <button onClick={()=>{ dispatch({type:"SET_PLAN", planType:"yearly"}); window.open(STRIPE_YEARLY,"_blank"); }}
-              style={{ position:"relative", border: planType==="yearly" ? "2px solid var(--ink)" : "1px solid var(--rule)", padding:"16px 16px 14px", background: planType==="yearly" ? "var(--ink)" : "transparent", color: planType==="yearly" ? "var(--paper)" : "var(--ink)", cursor:"pointer", textAlign:"left", transition:"all 160ms" }}>
-              <div style={{ position:"absolute", top:-9, left:12, background:"var(--accent)", color:"#fff", fontFamily:"var(--font-mono)", fontSize:7.5, letterSpacing:0.14, textTransform:"uppercase", padding:"2px 7px" }}>Best Value</div>
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline" }}>
-                <div style={{ fontFamily:"var(--font-display)", fontSize:17, letterSpacing:-0.1 }}>Yearly</div>
-                <div><span style={{ fontFamily:"var(--font-display)", fontSize:18, letterSpacing:-0.05 }}>$9.99</span><span style={{ fontFamily:"var(--font-mono)", fontSize:9, opacity:0.6, marginLeft:4 }}>AUD / yr</span></div>
-              </div>
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginTop:3 }}>
-                <div style={{ fontFamily:"var(--font-mono)", fontSize:9, opacity:0.6, letterSpacing:0.08 }}>≈ $0.83/month · Save 17%</div>
-                {planType==="yearly" && <span style={{ fontFamily:"var(--font-mono)", fontSize:8.5, letterSpacing:0.12, textTransform:"uppercase", opacity:0.65 }}>Current</span>}
-              </div>
-            </button>
+  const SecHead = ({ label }) => (
+    <div style={{ fontFamily:"var(--font-mono)", fontSize:9, letterSpacing:0.2, textTransform:"uppercase", color:"var(--ink-60)", padding:"22px 0 10px" }}>{label}</div>
+  );
+  const Row = ({ label, value, sub, onClick, accent, last=false }) => (
+    <button onClick={onClick} style={{ width:"100%", display:"flex", alignItems:"center", gap:14, padding:"15px 0", background:"transparent", border:"none", borderBottom: last ? "none" : "1px solid var(--rule)", cursor: onClick ? "pointer" : "default", color: accent ? "var(--accent)" : "var(--ink)", textAlign:"left" }}>
+      <div style={{ flex:1 }}>
+        <div style={{ fontFamily:"var(--font-body)", fontSize:15.5, lineHeight:1.2, color: accent ? "var(--accent)" : "var(--ink)" }}>{label}</div>
+        {sub && <div style={{ fontFamily:"var(--font-mono)", fontSize:9, color:"var(--ink-60)", marginTop:2, letterSpacing:0.08 }}>{sub}</div>}
+      </div>
+      {value && <span style={{ fontFamily:"var(--font-mono)", fontSize:10, color:"var(--ink-60)", letterSpacing:0.1, flexShrink:0 }}>{value}</span>}
+      {onClick && <svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="var(--ink-30)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+    </button>
+  );
+
+  const planLabel = planType === 'free' ? 'Free' : planType === 'monthly' ? 'Pro · Monthly' : 'Pro · Yearly';
+
+  return (
+    <div style={{ padding:"0 24px 120px", color:"var(--ink)" }}>
+
+      {/* Header */}
+      {user ? (
+        <div style={{ paddingTop:20, paddingBottom:20, borderBottom:"1px solid var(--rule)" }}>
+          <div style={{ display:"flex", alignItems:"center", gap:14 }}>
+            <div style={{ width:52, height:52, borderRadius:999, border:"1.5px solid var(--rule)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, background:"var(--rule)" }}>
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="9" r="5" stroke="var(--ink-60)" strokeWidth="1.4"/><path d="M3 24c0-5.5 4.5-10 10-10s10 4.5 10 10" stroke="var(--ink-60)" strokeWidth="1.4" strokeLinecap="round"/></svg>
+            </div>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ fontFamily:"var(--font-display)", fontSize:24, letterSpacing:-0.15, lineHeight:1, fontStyle:"italic" }}>{user.name}</div>
+              <div style={{ fontFamily:"var(--font-mono)", fontSize:9, color:"var(--ink-60)", marginTop:4, letterSpacing:0.1, textTransform:"uppercase" }}>{user.email}</div>
+            </div>
+            <span style={{ fontFamily:"var(--font-mono)", fontSize:8, letterSpacing:0.16, textTransform:"uppercase", padding:"4px 10px", background: isPro ? "var(--accent)" : "transparent", color: isPro ? "#fff" : "var(--ink-60)", border: isPro ? "none" : "1px solid var(--rule)", flexShrink:0 }}>{isPro ? "Pro" : "Free"}</span>
           </div>
-          {isPro && <div style={{ fontFamily:"var(--font-mono)", fontSize:9, color:"var(--ink-60)", letterSpacing:0.08 }}>To cancel your subscription, manage it directly in Stripe.</div>}
-        </>
+          {/* Stats row */}
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", marginTop:16, borderTop:"1px solid var(--rule)" }}>
+            {[
+              { v: totalWeeks, label:"Weeks" },
+              { v: totalSets,  label:"Sets" },
+              { v: user.daysPerWeek ? user.daysPerWeek+"/wk" : "—", label:"Goal" },
+            ].map((s, i) => (
+              <div key={i} style={{ padding:"12px 0", textAlign:"center", borderRight: i<2 ? "1px solid var(--rule)" : "none" }}>
+                <div style={{ fontFamily:"var(--font-display)", fontSize:28, letterSpacing:-0.04, lineHeight:1 }}>{s.v}</div>
+                <div style={{ fontFamily:"var(--font-mono)", fontSize:8, letterSpacing:0.16, textTransform:"uppercase", color:"var(--ink-60)", marginTop:4 }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       ) : (
-        <div style={{ marginTop:20, padding:"18px 16px", border:"1px dashed var(--rule)", textAlign:"center" }}>
-          <div style={{ fontFamily:"var(--font-display)", fontSize:16, letterSpacing:-0.1, marginBottom:10 }}>Sign in to sync your data</div>
-          <button onClick={()=>navigate({screen:"auth"})} style={{ fontFamily:"var(--font-mono)", fontSize:10, letterSpacing:0.14, textTransform:"uppercase", padding:"10px 20px", background:"var(--ink)", color:"var(--paper)", border:"none", cursor:"pointer" }}>Sign In / Sign Up →</button>
+        <div style={{ paddingTop:20, paddingBottom:20, borderBottom:"1px solid var(--rule)" }}>
+          <div style={{ fontFamily:"var(--font-display)", fontSize:42, lineHeight:0.95, letterSpacing:-0.035 }}><span style={{ fontStyle:"italic" }}>Profile</span></div>
+          <div style={{ marginTop:20, padding:"18px 0", textAlign:"center" }}>
+            <div style={{ fontFamily:"var(--font-display)", fontSize:16, letterSpacing:-0.1, marginBottom:12, fontStyle:"italic" }}>Sign in to sync your data</div>
+            <button onClick={()=>navigate({screen:"auth"})} style={{ fontFamily:"var(--font-mono)", fontSize:10, letterSpacing:0.14, textTransform:"uppercase", padding:"11px 22px", background:"var(--ink)", color:"var(--paper)", border:"none", cursor:"pointer" }}>Sign In / Sign Up →</button>
+          </div>
         </div>
       )}
-      <Rule label="Measurements"/>
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
-        {MEASURES.map(m=>(
-          <div key={m.key} style={{ border:"1px solid var(--rule)", padding:"10px 12px" }}>
-            <div style={{ fontFamily:"var(--font-mono)", fontSize:8.5, letterSpacing:0.14, textTransform:"uppercase", color:"var(--ink-60)", marginBottom:6 }}>{m.label}</div>
-            <div style={{ display:"flex", alignItems:"baseline", gap:4 }}>
-              <input type="number" placeholder="—" value={measurements[m.key]||""}
-                onChange={e=>dispatch({ type:"UPDATE_MEASUREMENT", key:m.key, value:parseFloat(e.target.value)||null })}
-                style={{ flex:1, width:0, fontFamily:"var(--font-display)", fontSize:22, letterSpacing:-0.05, color:"var(--ink)", background:"transparent", border:"none", outline:"none", padding:0 }}/>
-              <span style={{ fontFamily:"var(--font-mono)", fontSize:10, color:"var(--ink-60)" }}>{m.unit}</span>
+
+      {/* Account section */}
+      {user && (
+        <>
+          <SecHead label="Account"/>
+          {user.goal && <Row label="Goal" value={user.goal.charAt(0).toUpperCase()+user.goal.slice(1)} sub={[user.experience, user.daysPerWeek ? user.daysPerWeek+" days/week" : null].filter(Boolean).join(" · ")}/>}
+          <Row label="Subscription" value={planLabel} sub={isPro ? "Tap to change plan" : "Upgrade to unlock analytics"} onClick={()=>setShowSub(s=>!s)}/>
+          {showSub && (
+            <div style={{ paddingBottom:12 }}>
+              {[
+                { id:"free",    price:null,    period:null,    desc:"Basic tracking · No analytics" },
+                { id:"monthly", price:"$0.99", period:"/ mo",  desc:"All Pro features · Cancel anytime" },
+                { id:"yearly",  price:"$9.99", period:"/ yr",  desc:"≈ $0.83/month · Save 17%", badge:"Best Value" },
+              ].map(p => (
+                <button key={p.id} onClick={()=>{ dispatch({type:"SET_PLAN", planType:p.id}); if(p.id==="monthly") window.open(STRIPE_MONTHLY,"_blank"); if(p.id==="yearly") window.open(STRIPE_YEARLY,"_blank"); }}
+                  style={{ width:"100%", display:"flex", alignItems:"center", gap:12, padding:"13px 14px", marginBottom:6, background: planType===p.id ? "var(--ink)" : "transparent", color: planType===p.id ? "var(--paper)" : "var(--ink)", border:`1px solid ${planType===p.id?"var(--ink)":"var(--rule)"}`, cursor:"pointer", textAlign:"left", position:"relative", transition:"all 140ms" }}>
+                  {p.badge && <span style={{ position:"absolute", top:-8, left:10, background:"var(--accent)", color:"#fff", fontFamily:"var(--font-mono)", fontSize:7, letterSpacing:0.14, textTransform:"uppercase", padding:"2px 6px" }}>{p.badge}</span>}
+                  <div style={{ flex:1 }}>
+                    <div style={{ fontFamily:"var(--font-display)", fontSize:16, letterSpacing:-0.1 }}>{p.id.charAt(0).toUpperCase()+p.id.slice(1)}</div>
+                    <div style={{ fontFamily:"var(--font-mono)", fontSize:8.5, opacity:0.6, marginTop:2, letterSpacing:0.08 }}>{p.desc}</div>
+                  </div>
+                  {p.price
+                    ? <div style={{ textAlign:"right", flexShrink:0 }}><span style={{ fontFamily:"var(--font-display)", fontSize:18, letterSpacing:-0.05 }}>{p.price}</span><span style={{ fontFamily:"var(--font-mono)", fontSize:8.5, opacity:0.6, marginLeft:3 }}>{p.period}</span></div>
+                    : <span style={{ fontFamily:"var(--font-mono)", fontSize:9, opacity:0.6 }}>Free</span>
+                  }
+                  {planType===p.id && <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.2"/><path d="M4 7.2l2 2.2 4-4.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                </button>
+              ))}
+              {isPro && <div style={{ fontFamily:"var(--font-mono)", fontSize:8.5, color:"var(--ink-60)", letterSpacing:0.08, padding:"4px 2px" }}>To cancel, manage your subscription in Stripe.</div>}
             </div>
-          </div>
-        ))}
-      </div>
-      <Rule label="Settings"/>
-      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"12px 0", borderBottom:"1px solid var(--rule)" }}>
-        <div>
-          <div style={{ fontFamily:"var(--font-display)", fontSize:16 }}>Tracking Mode</div>
-          <div style={{ fontFamily:"var(--font-mono)", fontSize:9.5, color:"var(--ink-60)", marginTop:2 }}>{detailedMode?"Sets + reps per exercise":"Exercise checklist only"}</div>
+          )}
+          <Row label="Sign Out" onClick={()=>dispatch({type:"SIGN_OUT"})} accent last/>
+        </>
+      )}
+
+      {/* Preferences */}
+      <SecHead label="Preferences"/>
+      <Row label="Tracking Mode" value={detailedMode ? "Detailed" : "Simple"} sub={detailedMode ? "Sets + reps per exercise" : "Exercise checklist only"} onClick={()=>dispatch({type:"TOGGLE_DETAILED"})}/>
+      <Row label="Theme" value={state.theme==='ink' ? "Dark" : "Light"} onClick={()=>dispatch({type:"TOGGLE_THEME"})} last/>
+
+      {/* Measurements */}
+      <SecHead label="Measurements"/>
+      <Row label="Body Measurements" sub={Object.values(measurements).filter(Boolean).length+" logged"} onClick={()=>setShowMeasures(s=>!s)} last/>
+      {showMeasures && (
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, paddingBottom:12 }}>
+          {MEASURES.map(m=>(
+            <div key={m.key} style={{ border:"1px solid var(--rule)", padding:"10px 12px" }}>
+              <div style={{ fontFamily:"var(--font-mono)", fontSize:8.5, letterSpacing:0.14, textTransform:"uppercase", color:"var(--ink-60)", marginBottom:5 }}>{m.label}</div>
+              <div style={{ display:"flex", alignItems:"baseline", gap:4 }}>
+                <input type="number" placeholder="—" value={measurements[m.key]||""}
+                  onChange={e=>dispatch({ type:"UPDATE_MEASUREMENT", key:m.key, value:parseFloat(e.target.value)||null })}
+                  style={{ flex:1, width:0, fontFamily:"var(--font-display)", fontSize:22, letterSpacing:-0.05, color:"var(--ink)", background:"transparent", border:"none", outline:"none", padding:0 }}/>
+                <span style={{ fontFamily:"var(--font-mono)", fontSize:10, color:"var(--ink-60)" }}>{m.unit}</span>
+              </div>
+            </div>
+          ))}
         </div>
-        <button onClick={()=>dispatch({type:"TOGGLE_DETAILED"})}
-          style={{ fontFamily:"var(--font-mono)", fontSize:9.5, letterSpacing:0.1, textTransform:"uppercase", padding:"6px 12px", background:detailedMode?"var(--accent)":"transparent", color:detailedMode?"#fff":"var(--ink)", border:`1px solid ${detailedMode?"var(--accent)":"var(--ink-30)"}`, cursor:"pointer" }}>
-          {detailedMode?"Detailed":"Simple"}
-        </button>
-      </div>
-      <Rule label="Data"/>
-      <button onClick={handleExport}
-        style={{ width:"100%", fontFamily:"var(--font-mono)", fontSize:11, letterSpacing:0.16, textTransform:"uppercase", padding:"16px", background:"transparent", color:"var(--ink)", border:"1px solid var(--ink)", cursor:"pointer", textAlign:"left" }}>
-        Export All Data → JSON
-      </button>
-      <div style={{ fontFamily:"var(--font-mono)", fontSize:9.5, color:"var(--ink-60)", marginTop:8, letterSpacing:0.08 }}>Full history, measurements and settings as a JSON file.</div>
+      )}
+
+      {/* Data */}
+      <SecHead label="Data"/>
+      <Row label="Export All Data" sub="Full history, measurements and settings as JSON" onClick={handleExport} last/>
     </div>
   );
 }
