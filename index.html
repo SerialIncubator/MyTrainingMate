@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="MyTrainingMate" />
 <link rel="apple-touch-icon" href="icon-512px.png" />
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com https://buy.stripe.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; connect-src 'self';" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com https://buy.stripe.com https://frbcrjaeszkjnihvcsax.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; connect-src 'self' https://frbcrjaeszkjnihvcsax.supabase.co wss://frbcrjaeszkjnihvcsax.supabase.co;" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -30,6 +30,14 @@
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js" crossorigin="anonymous"></script>
+<script>
+  const _sb = window.supabase.createClient(
+    'https://frbcrjaeszkjnihvcsax.supabase.co',
+    'sb_publishable_GlYJflKjSxm9L2IWY5Ivyw_sw5fa7-V'
+  );
+  window.sb = _sb;
+</script>
 
 <!-- ═══ iOS FRAME ═══ -->
 <script type="text/babel">
@@ -1404,7 +1412,7 @@ function AnalyticsScreen({ state, navigate, setShowPaywall }) {
   );
 }
 
-function ProfileScreen({ state, dispatch, navigate }) {
+function ProfileScreen({ state, dispatch, navigate, onSignOut }) {
   const { measurements={}, detailedMode, user, isPro, planType='free', weekHistory=[], activeSplit, detailedSets: stateDS={} } = state;
   const [showSub, setShowSub] = useState(false);
   const [showMeasures, setShowMeasures] = useState(false);
@@ -1518,8 +1526,8 @@ function ProfileScreen({ state, dispatch, navigate }) {
               {isPro && <div style={{ fontFamily:"var(--font-mono)", fontSize:8.5, color:"var(--ink-60)", letterSpacing:0.08, padding:"4px 2px" }}>To cancel, manage your subscription in Stripe.</div>}
             </div>
           )}
-          <Row label="Sign Out" onClick={()=>dispatch({type:"SIGN_OUT"})} accent/>
-          <Row label="Delete Account" onClick={()=>{ if(window.confirm('Permanently delete your account and all data? This cannot be undone.')) dispatch({type:"SIGN_OUT"}); }} accent last/>
+          <Row label="Sign Out" onClick={onSignOut || (()=>dispatch({type:"SIGN_OUT"}))} accent/>
+          <Row label="Delete Account" onClick={()=>{ if(window.confirm('Permanently delete your account and all data? This cannot be undone.')) { if(onSignOut) onSignOut(); else dispatch({type:"SIGN_OUT"}); } }} accent last/>
         </>
       )}
 
@@ -1592,6 +1600,7 @@ function AuthScreen({ state, dispatch, navigate }) {
   const [form, setForm] = useStateAuth({ email:'', password:'', name:'', goal:'', experience:'', daysPerWeek:'4' });
   const [termsOk, setTermsOk] = useStateAuth(false);
   const [error, setError] = useStateAuth('');
+  const [loading, setLoading] = useStateAuth(false);
   const [legalModal, setLegalModal] = useStateAuth(null);
   const set = (k, v) => setForm(f => ({...f, [k]:v}));
   const GOALS = [
@@ -1608,12 +1617,37 @@ function AuthScreen({ state, dispatch, navigate }) {
   const DAYS = ['3','4','5','6'];
   const STEPS = ['account','name','goal','experience','days','plan'];
 
-  const doSignIn = () => {
+  const doSignIn = async () => {
     if (!form.email || !form.password) { setError('Please fill in all fields'); return; }
-    dispatch({ type:'SET_USER', user:{ email:form.email, name:form.email.split('@')[0] } });
+    setLoading(true); setError('');
+    const { data, error: err } = await sb.auth.signInWithPassword({ email: form.email, password: form.password });
+    if (err) { setError(err.message); setLoading(false); return; }
+    const { data: ud } = await sb.from('user_data').select('profile,training').eq('user_id', data.user.id).maybeSingle();
+    if (ud?.training) {
+      dispatch({ type:'LOAD_CLOUD', profile: ud.profile || {}, training: ud.training });
+    } else {
+      dispatch({ type:'SET_USER', user:{ email: data.user.email, ...(data.user.user_metadata || {}) } });
+    }
+    setLoading(false);
     navigate({ screen:'home' });
   };
-  const doNext = () => {
+  const doCreateAccount = async (planType) => {
+    const { data, error: err } = await sb.auth.signUp({
+      email: form.email,
+      password: form.password,
+      options: { data: { name: form.name, goal: form.goal, experience: form.experience, daysPerWeek: form.daysPerWeek } }
+    });
+    if (err) { setError(err.message); setLoading(false); return false; }
+    if (!data.session) { setLoading(false); setMode('email-confirm'); return false; }
+    dispatch({ type:'SET_USER', user:{ email:form.email, name:form.name, goal:form.goal, experience:form.experience, daysPerWeek:form.daysPerWeek } });
+    if (planType !== 'free') {
+      dispatch({ type:'SET_PLAN', planType });
+      window.open(planType==='monthly' ? STRIPE_MONTHLY : STRIPE_YEARLY, '_blank');
+    }
+    navigate({ screen:'home' });
+    return true;
+  };
+  const doNext = async () => {
     const step = STEPS[signupStep];
     if (step==='account' && (!form.email || !form.password)) { setError('Fill in email and password'); return; }
     if (step==='name' && !form.name.trim()) { setError('Enter your name'); return; }
@@ -1622,16 +1656,12 @@ function AuthScreen({ state, dispatch, navigate }) {
     if (step==='plan' && !termsOk) { setError('Accept the terms to continue'); return; }
     setError('');
     if (signupStep < STEPS.length-1) { setSignupStep(s=>s+1); return; }
-    const planType = form.selectedPlan==='monthly' ? 'monthly' : 'yearly';
-    const userObj = { email:form.email, name:form.name, goal:form.goal, experience:form.experience, daysPerWeek:form.daysPerWeek };
-    dispatch({ type:'SET_USER', user:userObj });
-    dispatch({ type:'SET_PLAN', planType });
-    navigate({ screen:'home' });
-    window.open(planType==='monthly' ? STRIPE_MONTHLY : STRIPE_YEARLY, '_blank');
+    setLoading(true);
+    await doCreateAccount(form.selectedPlan==='monthly' ? 'monthly' : 'yearly');
   };
-  const skipPlan = () => {
-    dispatch({ type:'SET_USER', user:{ email:form.email, name:form.name, goal:form.goal, experience:form.experience, daysPerWeek:form.daysPerWeek } });
-    navigate({ screen:'home' });
+  const skipPlan = async () => {
+    setLoading(true); setError('');
+    await doCreateAccount('free');
   };
 
   const inputStyle = { width:'100%', fontFamily:'var(--font-mono)', fontSize:14, padding:'12px 14px', border:'1px solid var(--ink-30)', background:'transparent', color:'var(--ink)', outline:'none', boxSizing:'border-box' };
@@ -1684,7 +1714,7 @@ function AuthScreen({ state, dispatch, navigate }) {
         <div><div style={labelStyle}>Email</div><input type="email" value={form.email} onChange={e=>set('email',e.target.value)} placeholder="you@example.com" style={inputStyle}/></div>
         <div><div style={labelStyle}>Password</div><input type="password" value={form.password} onChange={e=>set('password',e.target.value)} placeholder="••••••••" style={inputStyle}/></div>
       </div>
-      <button onClick={doSignIn} style={{ width:'100%', fontFamily:'var(--font-mono)', fontSize:11, letterSpacing:0.18, textTransform:'uppercase', padding:17, background:'var(--ink)', color:'var(--paper)', border:'none', cursor:'pointer', marginBottom:14 }}>Sign In</button>
+      <button onClick={doSignIn} disabled={loading} style={{ width:'100%', fontFamily:'var(--font-mono)', fontSize:11, letterSpacing:0.18, textTransform:'uppercase', padding:17, background:'var(--ink)', color:'var(--paper)', border:'none', cursor:'pointer', marginBottom:14, opacity:loading?0.6:1 }}>{loading ? 'Signing in…' : 'Sign In'}</button>
       <div style={{ textAlign:'center', fontFamily:'var(--font-mono)', fontSize:9.5, color:'var(--ink-60)', marginBottom:10 }}>
         <span onClick={()=>setMode('forgot')} style={{ color:'var(--ink)', textDecoration:'underline', cursor:'pointer' }}>Forgot password?</span>
       </div>
@@ -1708,7 +1738,7 @@ function AuthScreen({ state, dispatch, navigate }) {
         <input type="email" value={form.email} onChange={e=>set('email',e.target.value)} placeholder="you@example.com" style={inputStyle}/>
       </div>
       {error && <div style={{ fontFamily:'var(--font-mono)', fontSize:9.5, color:'var(--accent)', marginBottom:12 }}>{error}</div>}
-      <button onClick={()=>{ if(!form.email.includes('@')){setError('Enter a valid email');return;} setError(''); setMode('forgot-sent'); }} style={{ width:'100%', fontFamily:'var(--font-mono)', fontSize:11, letterSpacing:0.18, textTransform:'uppercase', padding:17, background:'var(--ink)', color:'var(--paper)', border:'none', cursor:'pointer' }}>Send Reset Link</button>
+      <button onClick={async()=>{ if(!form.email.includes('@')){setError('Enter a valid email');return;} setLoading(true); setError(''); await sb.auth.resetPasswordForEmail(form.email,{redirectTo:window.location.origin}); setLoading(false); setMode('forgot-sent'); }} disabled={loading} style={{ width:'100%', fontFamily:'var(--font-mono)', fontSize:11, letterSpacing:0.18, textTransform:'uppercase', padding:17, background:'var(--ink)', color:'var(--paper)', border:'none', cursor:'pointer', opacity:loading?0.6:1 }}>{loading ? '…' : 'Send Reset Link'}</button>
     </div>
   );
 
@@ -1719,6 +1749,16 @@ function AuthScreen({ state, dispatch, navigate }) {
         We've sent a password reset link to{'\n'}<span style={{ color:'var(--ink)' }}>{form.email}</span>
       </div>
       <button onClick={()=>setMode('signin')} style={{ fontFamily:'var(--font-mono)', fontSize:10.5, letterSpacing:0.16, textTransform:'uppercase', padding:'12px 24px', background:'transparent', color:'var(--ink)', border:'1px solid var(--ink)', cursor:'pointer' }}>Back to Sign In</button>
+    </div>
+  );
+
+  if (mode==='email-confirm') return (
+    <div style={{ padding:'0 24px 120px', color:'var(--ink)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', minHeight:300, textAlign:'center' }}>
+      <div style={{ fontFamily:'var(--font-display)', fontSize:32, fontStyle:'italic', marginBottom:12 }}>Confirm your email</div>
+      <div style={{ fontFamily:'var(--font-mono)', fontSize:9.5, color:'var(--ink-60)', letterSpacing:0.1, lineHeight:1.7, marginBottom:28 }}>
+        We sent a confirmation link to{'\n'}<span style={{ color:'var(--ink)' }}>{form.email}</span>{'\n'}Click it then come back to sign in.
+      </div>
+      <button onClick={()=>setMode('signin')} style={{ fontFamily:'var(--font-mono)', fontSize:10.5, letterSpacing:0.16, textTransform:'uppercase', padding:'12px 24px', background:'var(--ink)', color:'var(--paper)', border:'none', cursor:'pointer' }}>Go to Sign In</button>
     </div>
   );
 
@@ -1845,12 +1885,12 @@ function AuthScreen({ state, dispatch, navigate }) {
       </>}
 
       <div style={{ marginTop:32 }}>
-        <button onClick={doNext} style={{ width:'100%', fontFamily:'var(--font-mono)', fontSize:11, letterSpacing:0.18, textTransform:'uppercase', padding:17, background:'var(--ink)', color:'var(--paper)', border:'none', cursor:'pointer' }}>
-          {step==='plan' ? `Start Pro — ${form.selectedPlan==='monthly' ? '$1.99/mo' : '$9.99/yr'} →` : 'Continue →'}
+        <button onClick={doNext} disabled={loading} style={{ width:'100%', fontFamily:'var(--font-mono)', fontSize:11, letterSpacing:0.18, textTransform:'uppercase', padding:17, background:'var(--ink)', color:'var(--paper)', border:'none', cursor:'pointer', opacity:loading?0.6:1 }}>
+          {loading ? '…' : step==='plan' ? `Start Pro — ${form.selectedPlan==='monthly' ? '$1.99/mo' : '$9.99/yr'} →` : 'Continue →'}
         </button>
         {step==='plan' && (
-          <button onClick={skipPlan} style={{ width:'100%', fontFamily:'var(--font-mono)', fontSize:10, letterSpacing:0.14, textTransform:'uppercase', padding:14, background:'transparent', color:'var(--ink-60)', border:'none', cursor:'pointer', marginTop:6 }}>
-            Continue Free — Limited features
+          <button onClick={skipPlan} disabled={loading} style={{ width:'100%', fontFamily:'var(--font-mono)', fontSize:10, letterSpacing:0.14, textTransform:'uppercase', padding:14, background:'transparent', color:'var(--ink-60)', border:'none', cursor:'pointer', marginTop:6, opacity:loading?0.6:1 }}>
+            {loading ? '…' : 'Continue Free — Limited features'}
           </button>
         )}
         {step==='account' && (
@@ -1872,7 +1912,7 @@ Object.assign(window, { WorkoutCalendar, BodyMap, Dashboard, DayScreen, Analytic
 
 <!-- ═══ APP ═══ -->
 <script type="text/babel">
-const { useReducer, useEffect: useEffectApp, useState: useStateApp } = React;
+const { useReducer, useEffect: useEffectApp, useState: useStateApp, useRef: useRefApp } = React;
 
 const ACCENT_CHOICES = { vermilion:"oklch(0.58 0.20 28)", ink:"oklch(0.22 0.02 260)", olive:"oklch(0.55 0.11 115)", cobalt:"oklch(0.48 0.17 258)" };
 const VARIANTS = {
@@ -2038,6 +2078,30 @@ function reducer(state, action) {
 
     case "SET_USER":
       return { ...state, user: action.user };
+    case "LOAD_CLOUD": {
+      const { profile = {}, training = {} } = action;
+      const activeSplit = SPLITS[training.activeSplit] ? training.activeSplit : 'pushPull';
+      return {
+        ...INITIAL_STATE,
+        theme: state.theme,
+        activeSplit,
+        completions:   training.completions   || INITIAL_STATE.completions,
+        completedDays: training.completedDays || INITIAL_STATE.completedDays,
+        setsLog:       training.setsLog       || INITIAL_STATE.setsLog,
+        hiddenSlots:   training.hiddenSlots   || INITIAL_STATE.hiddenSlots,
+        extraPlan:     training.extraPlan     || INITIAL_STATE.extraPlan,
+        detailedSets:  training.detailedSets  || INITIAL_STATE.detailedSets,
+        customPlan:    training.customPlan    || { days:[] },
+        extraDays:     training.extraDays     || INITIAL_STATE.extraDays,
+        weekHistory:   training.weekHistory   || [],
+        bodyLog:       training.bodyLog       || [],
+        measurements:  training.measurements  || {},
+        isPro:         training.isPro         || false,
+        planType:      training.planType      || 'free',
+        detailedMode:  training.detailedMode  || false,
+        user:          profile,
+      };
+    }
     case "SIGN_OUT":
       return { ...INITIAL_STATE, theme: state.theme };
 
@@ -2118,6 +2182,42 @@ function App() {
   const [state, dispatch] = useReducer(reducer, null, loadState);
   useEffectApp(() => { localStorage.setItem("tl-state", JSON.stringify(state)); }, [state]);
 
+  // Restore Supabase session on mount
+  useEffectApp(() => {
+    sb.auth.getSession().then(({ data: { session } }) => {
+      if (!session) return;
+      if (state.user) return; // already loaded from localStorage
+      sb.from('user_data').select('profile,training').eq('user_id', session.user.id).maybeSingle().then(({ data: ud }) => {
+        if (ud?.training) dispatch({ type:'LOAD_CLOUD', profile: ud.profile || {}, training: ud.training });
+        else dispatch({ type:'SET_USER', user:{ email: session.user.email, ...(session.user.user_metadata || {}) } });
+      });
+    });
+    // Keep local state in sync when auth changes (e.g. email confirmation)
+    const { data: { subscription } } = sb.auth.onAuthStateChange((_event, session) => {
+      if (_event === 'SIGNED_OUT') dispatch({ type:'SIGN_OUT' });
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // Debounced cloud sync on state change
+  const syncTimer = useRefApp(null);
+  useEffectApp(() => {
+    if (!state.user) return;
+    clearTimeout(syncTimer.current);
+    syncTimer.current = setTimeout(async () => {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) return;
+      const { user, theme, ...training } = state;
+      const profile = { email: user?.email, name: user?.name, goal: user?.goal, experience: user?.experience, daysPerWeek: user?.daysPerWeek };
+      await sb.from('user_data').upsert({ user_id: session.user.id, profile, training, updated_at: new Date().toISOString() }, { onConflict: 'user_id' }).catch(() => {});
+    }, 2000);
+  }, [state]);
+
+  const handleSignOut = async () => {
+    await sb.auth.signOut();
+    dispatch({ type:'SIGN_OUT' });
+  };
+
 
   const [route, setRoute] = useStateApp(() => {
     try { const s=localStorage.getItem("tl-route"); if(s) return JSON.parse(s); } catch {}
@@ -2179,7 +2279,7 @@ function App() {
   const renderScreen = () => {
     if (route.screen==="day")       return <DayScreen state={state} dispatch={dispatch} navigate={navigate} dayId={route.dayId} isPro={state.isPro} setShowPaywall={setShowPaywall}/>;
     if (route.screen==="analytics") return <AnalyticsScreen state={state} dispatch={dispatch} navigate={navigate} setShowPaywall={setShowPaywall}/>;
-    if (route.screen==="profile")   return <ProfileScreen state={state} dispatch={dispatch} navigate={navigate}/>;
+    if (route.screen==="profile")   return <ProfileScreen state={state} dispatch={dispatch} navigate={navigate} onSignOut={handleSignOut}/>;
     if (route.screen==="auth")      return <AuthScreen state={state} dispatch={dispatch} navigate={navigate}/>;
     return <Dashboard state={state} dispatch={dispatch} navigate={navigate} setShowPaywall={setShowPaywall}/>;
   };
