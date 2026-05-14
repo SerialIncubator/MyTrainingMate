@@ -31,7 +31,7 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js" crossorigin="anonymous"></script>
-<script src="https://app.termly.io/resource-blocker/23c9f527-18f2-4b26-aad1-2dc98c4b69e2?autoBlock=on"></script>
+<script async src="https://app.termly.io/resource-blocker/23c9f527-18f2-4b26-aad1-2dc98c4b69e2?autoBlock=on"></script>
 <script>
   const _sb = window.supabase.createClient(
     'https://frbcrjaeszkjnihvcsax.supabase.co',
@@ -1524,11 +1524,11 @@ function ProfileScreen({ state, dispatch, navigate, onSignOut }) {
                   {planType===p.id && <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.2"/><path d="M4 7.2l2 2.2 4-4.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
                 </button>
               ))}
-              {isPro && <div style={{ fontFamily:"var(--font-mono)", fontSize:8.5, color:"var(--ink-60)", letterSpacing:0.08, padding:"4px 2px" }}>To cancel, manage your subscription in Stripe.</div>}
+              {isPro && <div style={{ fontFamily:"var(--font-mono)", fontSize:8.5, color:"var(--ink-60)", letterSpacing:0.08, padding:"4px 2px" }}>To cancel: <span onClick={()=>window.open(STRIPE_PORTAL,'_blank')} style={{ textDecoration:'underline', cursor:'pointer', color:'var(--ink)' }}>Open billing portal →</span></div>}
             </div>
           )}
           <Row label="Sign Out" onClick={onSignOut || (()=>dispatch({type:"SIGN_OUT"}))} accent/>
-          <Row label="Delete Account" onClick={()=>{ if(window.confirm('Permanently delete your account and all data? This cannot be undone.')) { if(onSignOut) onSignOut(); else dispatch({type:"SIGN_OUT"}); } }} accent last/>
+          <Row label="Delete Account" onClick={async()=>{ if(window.confirm('Permanently delete your account and all data? This cannot be undone.')) { const { data:{session} } = await sb.auth.getSession(); if(session) { await sb.from('user_data').delete().eq('user_id',session.user.id).catch(()=>{}); await sb.auth.signOut(); } if(onSignOut) onSignOut(); else dispatch({type:"SIGN_OUT"}); } }} accent last/>
         </>
       )}
 
@@ -1646,6 +1646,7 @@ function AuthScreen({ state, dispatch, navigate }) {
   const doNext = async () => {
     const step = STEPS[signupStep];
     if (step==='account' && (!form.email || !form.password)) { setError('Fill in email and password'); return; }
+    if (step==='account' && form.password.length < 8) { setError('Password must be at least 8 characters'); return; }
     if (step==='name' && !form.name.trim()) { setError('Enter your name'); return; }
     if (step==='goal' && !form.goal) { setError('Select a goal'); return; }
     if (step==='experience' && !form.experience) { setError('Select your level'); return; }
@@ -1754,7 +1755,8 @@ function AuthScreen({ state, dispatch, navigate }) {
       <div style={{ fontFamily:'var(--font-mono)', fontSize:9.5, color:'var(--ink-60)', letterSpacing:0.1, lineHeight:1.7, marginBottom:28 }}>
         We sent a confirmation link to{'\n'}<span style={{ color:'var(--ink)' }}>{form.email}</span>{'\n'}Click it then come back to sign in.
       </div>
-      <button onClick={()=>setMode('signin')} style={{ fontFamily:'var(--font-mono)', fontSize:10.5, letterSpacing:0.16, textTransform:'uppercase', padding:'12px 24px', background:'var(--ink)', color:'var(--paper)', border:'none', cursor:'pointer' }}>Go to Sign In</button>
+      <button onClick={()=>setMode('signin')} style={{ fontFamily:'var(--font-mono)', fontSize:10.5, letterSpacing:0.16, textTransform:'uppercase', padding:'12px 24px', background:'var(--ink)', color:'var(--paper)', border:'none', cursor:'pointer', marginBottom:14 }}>Go to Sign In</button>
+      <button onClick={async()=>{ setLoading(true); await sb.auth.resend({ type:'signup', email:form.email }); setLoading(false); }} disabled={loading} style={{ fontFamily:'var(--font-mono)', fontSize:9.5, letterSpacing:0.14, textTransform:'uppercase', padding:'10px 20px', background:'transparent', color:'var(--ink-60)', border:'1px solid var(--rule)', cursor:'pointer', opacity:loading?0.5:1 }}>{loading?'Sending…':'Resend email'}</button>
     </div>
   );
 
@@ -1859,7 +1861,7 @@ function AuthScreen({ state, dispatch, navigate }) {
               <div style={{ fontFamily:'var(--font-display)', fontSize:18, letterSpacing:-0.1 }}>Yearly</div>
               <div><span style={{ fontFamily:'var(--font-display)', fontSize:22, letterSpacing:-0.05 }}>$9.99</span><span style={{ fontFamily:'var(--font-mono)', fontSize:9, opacity:0.6, marginLeft:4 }}>AUD / year</span></div>
             </div>
-            <div style={{ fontFamily:'var(--font-mono)', fontSize:9, opacity:0.6, marginTop:4, letterSpacing:0.08 }}>≈ $0.83/month · Save 17%</div>
+            <div style={{ fontFamily:'var(--font-mono)', fontSize:9, opacity:0.6, marginTop:4, letterSpacing:0.08 }}>≈ $0.83/month · Save 58%</div>
           </button>
           {/* Monthly plan */}
           <button onClick={()=>set('selectedPlan','monthly')} style={{ border: form.selectedPlan==='monthly' ? '2px solid var(--ink)' : '1px solid var(--rule)', padding:'16px 18px', background: form.selectedPlan==='monthly' ? 'var(--ink)' : 'transparent', color: form.selectedPlan==='monthly' ? 'var(--paper)' : 'var(--ink)', cursor:'pointer', textAlign:'left', transition:'all 160ms' }}>
@@ -1899,9 +1901,9 @@ function AuthScreen({ state, dispatch, navigate }) {
   );
 }
 
-const STRIPE_PK      = 'pk_live_51TJObr2c5hGzCMPfJS6oeIZuPB5hLuBmawy5pvePFNL5o2eZYurvW40qt2kl7VRJ5piLbqEYHhu7qEuOi9j6anIr00BZbE1yKJ';
 const STRIPE_MONTHLY = 'https://buy.stripe.com/bJebIU03X5ZHchObO0bfO01';
 const STRIPE_YEARLY  = 'https://buy.stripe.com/5kQ8wI03X87P3Li3hubfO00';
+const STRIPE_PORTAL  = 'https://billing.stripe.com/p/login/TODO'; // replace with your Stripe Customer Portal URL
 
 Object.assign(window, { WorkoutCalendar, BodyMap, Dashboard, DayScreen, AnalyticsScreen, ProfileScreen, AuthScreen, PaywallModal, computeProgress });
 </script>
