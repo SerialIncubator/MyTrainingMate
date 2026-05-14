@@ -1,0 +1,2347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>MyTrainingMate</title>
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#1c1a18" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="MyTrainingMate" />
+<link rel="apple-touch-icon" href="icon-512px.png" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com https://buy.stripe.com https://frbcrjaeszkjnihvcsax.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; connect-src 'self' https://frbcrjaeszkjnihvcsax.supabase.co wss://frbcrjaeszkjnihvcsax.supabase.co;" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; }
+  body { font-family: "Geist", system-ui, sans-serif; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  #root { width: 100%; }
+  button { font: inherit; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  input, textarea, select { background: transparent; color: inherit; -webkit-appearance: none; }
+  * { box-sizing: border-box; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js" crossorigin="anonymous"></script>
+<script>
+  const _sb = window.supabase.createClient(
+    'https://frbcrjaeszkjnihvcsax.supabase.co',
+    'sb_publishable_GlYJflKjSxm9L2IWY5Ivyw_sw5fa7-V'
+  );
+  window.sb = _sb;
+</script>
+
+<!-- ═══ iOS FRAME ═══ -->
+<script type="text/babel">
+function IOSStatusBar({ dark = false }) {
+  const c = dark ? '#fff' : '#000';
+  return (
+    <div style={{ display:'flex', alignItems:'center', justifyContent:'center', padding:'21px 24px 19px', boxSizing:'border-box', position:'relative', zIndex:20, width:'100%' }}>
+      <div style={{ flex:1, height:22, display:'flex', alignItems:'center', justifyContent:'center' }}>
+        <span style={{ fontFamily:'-apple-system,"SF Pro",system-ui', fontWeight:590, fontSize:17, lineHeight:'22px', color:c }}>9:41</span>
+      </div>
+      <div style={{ flex:1, height:22, display:'flex', alignItems:'center', justifyContent:'center', gap:7 }}>
+        <svg width="19" height="12" viewBox="0 0 19 12"><rect x="0" y="7.5" width="3.2" height="4.5" rx="0.7" fill={c}/><rect x="4.8" y="5" width="3.2" height="7" rx="0.7" fill={c}/><rect x="9.6" y="2.5" width="3.2" height="9.5" rx="0.7" fill={c}/><rect x="14.4" y="0" width="3.2" height="12" rx="0.7" fill={c}/></svg>
+        <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill={c}/><path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill={c}/><circle cx="8.5" cy="10.5" r="1.5" fill={c}/></svg>
+        <svg width="27" height="13" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke={c} strokeOpacity="0.35" fill="none"/><rect x="2" y="2" width="20" height="9" rx="2" fill={c}/><path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill={c} fillOpacity="0.4"/></svg>
+      </div>
+    </div>
+  );
+}
+function IOSDevice({ children, width=390, height=844, dark=false }) {
+  return (
+    <div style={{ width, height, borderRadius:48, overflow:'hidden', position:'relative', background:dark?'#000':'#F2F2F7', boxShadow:'0 40px 80px rgba(0,0,0,0.18),0 0 0 1px rgba(0,0,0,0.12)', WebkitFontSmoothing:'antialiased' }}>
+      <div style={{ position:'absolute', top:11, left:'50%', transform:'translateX(-50%)', width:126, height:37, borderRadius:24, background:'#000', zIndex:50 }} />
+      <div style={{ position:'absolute', top:0, left:0, right:0, zIndex:10 }}><IOSStatusBar dark={dark} /></div>
+      <div style={{ height:'100%', display:'flex', flexDirection:'column' }}>
+        <div style={{ flex:1, overflow:'auto' }}>{children}</div>
+      </div>
+      <div style={{ position:'absolute', bottom:0, left:0, right:0, zIndex:60, height:34, display:'flex', justifyContent:'center', alignItems:'flex-end', paddingBottom:8, pointerEvents:'none' }}>
+        <div style={{ width:139, height:5, borderRadius:100, background:dark?'rgba(255,255,255,0.7)':'rgba(0,0,0,0.25)' }} />
+      </div>
+    </div>
+  );
+}
+Object.assign(window, { IOSDevice, IOSStatusBar });
+</script>
+
+<!-- ═══ DATA ═══ -->
+<script type="text/babel">
+const MUSCLE_GROUPS = ["legs","back","chest","arms","shoulders","abs"];
+const MG_COLORS = { legs:"oklch(0.62 0.13 145)", back:"oklch(0.52 0.15 258)", chest:"oklch(0.58 0.17 28)", arms:"oklch(0.56 0.15 305)", shoulders:"oklch(0.68 0.14 70)", abs:"oklch(0.66 0.10 205)" };
+const MG_LABEL  = { legs:"Legs", back:"Back", chest:"Chest", arms:"Arms", shoulders:"Shoulders", abs:"Abs" };
+const DAY_COLORS = ["oklch(0.52 0.15 258)","oklch(0.55 0.14 145)","oklch(0.58 0.17 28)","oklch(0.72 0.14 85)","oklch(0.56 0.15 305)","oklch(0.58 0.20 28)","oklch(0.66 0.10 205)"];
+
+const EXERCISES = {
+  // ── Legs ──
+  squat:              { id:"squat",              name:"Back Squat",                  group:"legs" },
+  leg_press:          { id:"leg_press",          name:"Leg Press",                   group:"legs" },
+  hack_squat:         { id:"hack_squat",         name:"Hack Squat",                  group:"legs" },
+  leg_extension:      { id:"leg_extension",      name:"Leg Extension",               group:"legs" },
+  romanian_deadlift:  { id:"romanian_deadlift",  name:"Romanian Deadlift",           group:"legs" },
+  lying_leg_curls:    { id:"lying_leg_curls",    name:"Lying Leg Curls",             group:"legs" },
+  seated_leg_curl:    { id:"seated_leg_curl",    name:"Seated Leg Curl",             group:"legs" },
+  hip_thrust:         { id:"hip_thrust",         name:"Hip Thrust",                  group:"legs" },
+  bulgarian_split:    { id:"bulgarian_split",    name:"Bulgarian Split Squat",       group:"legs" },
+  goblet_squat:       { id:"goblet_squat",       name:"Goblet Squat",                group:"legs" },
+  sumo_squat:         { id:"sumo_squat",         name:"Sumo Squat",                  group:"legs" },
+  barbell_lunges:     { id:"barbell_lunges",     name:"Barbell Lunges",              group:"legs" },
+  walking_lunges:     { id:"walking_lunges",     name:"Walking Lunges",              group:"legs" },
+  reverse_lunges:     { id:"reverse_lunges",     name:"Reverse Lunges",              group:"legs" },
+  step_ups:           { id:"step_ups",           name:"Step-Ups",                    group:"legs" },
+  good_mornings:      { id:"good_mornings",      name:"Good Mornings",               group:"legs" },
+  nordic_curl:        { id:"nordic_curl",        name:"Nordic Curl",                 group:"legs" },
+  single_leg_press:   { id:"single_leg_press",   name:"Single Leg Press",            group:"legs" },
+  calf_raises:        { id:"calf_raises",        name:"Calf Raises",                 group:"legs" },
+  adductors:          { id:"adductors",          name:"Adductor / Abductor Machine", group:"legs" },
+  // ── Back ──
+  deadlift:           { id:"deadlift",           name:"Deadlift",                    group:"back" },
+  pullups_bw:         { id:"pullups_bw",         name:"Pull-Ups",                    group:"back" },
+  lat_pulldown:       { id:"lat_pulldown",       name:"Lat Pulldown",                group:"back" },
+  db_row:             { id:"db_row",             name:"Dumbbell Row",                group:"back" },
+  barbell_row:        { id:"barbell_row",        name:"Barbell Row",                 group:"back" },
+  t_bar_row:          { id:"t_bar_row",          name:"T-Bar Row",                   group:"back" },
+  seated_cable_rows:  { id:"seated_cable_rows",  name:"Seated Cable Row",            group:"back" },
+  wide_grip_row:      { id:"wide_grip_row",      name:"Wide Grip Cable Row",         group:"back" },
+  single_arm_row:     { id:"single_arm_row",     name:"Single Arm Cable Row",        group:"back" },
+  chest_supported_row:{ id:"chest_supported_row",name:"Chest Supported Row",         group:"back" },
+  rack_pull:          { id:"rack_pull",          name:"Rack Pull",                   group:"back" },
+  hyperextension:     { id:"hyperextension",     name:"Hyperextension",              group:"back" },
+  rear_delt_fly:      { id:"rear_delt_fly",      name:"Rear Delt Fly",               group:"back" },
+  // ── Chest ──
+  bench_press:        { id:"bench_press",        name:"Bench Press",                 group:"chest" },
+  incline_bench:      { id:"incline_bench",      name:"Incline Bench Press",         group:"chest" },
+  decline_bench:      { id:"decline_bench",      name:"Decline Bench Press",         group:"chest" },
+  dumbbell_bench:     { id:"dumbbell_bench",     name:"Dumbbell Bench Press",        group:"chest" },
+  weighted_dips:      { id:"weighted_dips",      name:"Chest Dips",                  group:"chest" },
+  dumbbell_flyes:     { id:"dumbbell_flyes",     name:"Dumbbell Flyes",              group:"chest" },
+  cable_flyes:        { id:"cable_flyes",        name:"Cable Flyes",                 group:"chest" },
+  cable_crossovers:   { id:"cable_crossovers",   name:"Cable Crossovers",            group:"chest" },
+  pec_deck:           { id:"pec_deck",           name:"Pec Deck",                    group:"chest" },
+  push_ups:           { id:"push_ups",           name:"Push-Ups",                    group:"chest" },
+  // ── Shoulders ──
+  military_press:     { id:"military_press",     name:"Military Press",              group:"shoulders" },
+  dumbbell_ohp:       { id:"dumbbell_ohp",       name:"Dumbbell Shoulder Press",     group:"shoulders" },
+  arnold_press:       { id:"arnold_press",       name:"Arnold Press",                group:"shoulders" },
+  lateral_raises:     { id:"lateral_raises",     name:"Lateral Raises",              group:"shoulders" },
+  cable_lateral:      { id:"cable_lateral",      name:"Cable Lateral Raises",        group:"shoulders" },
+  frontal_raises:     { id:"frontal_raises",     name:"Frontal Raises",              group:"shoulders" },
+  face_pulls:         { id:"face_pulls",         name:"Face Pulls",                  group:"shoulders" },
+  upright_row:        { id:"upright_row",        name:"Upright Row",                 group:"shoulders" },
+  shrugs:             { id:"shrugs",             name:"Shrugs",                      group:"shoulders" },
+  // ── Arms ──
+  barbell_curl:       { id:"barbell_curl",       name:"Barbell Curl",                group:"arms" },
+  ez_bar_curls:       { id:"ez_bar_curls",       name:"EZ Bar Curl",                 group:"arms" },
+  dumbbell_curl:      { id:"dumbbell_curl",      name:"Dumbbell Curl",               group:"arms" },
+  hammer_curl:        { id:"hammer_curl",        name:"Hammer Curl",                 group:"arms" },
+  preacher_curl:      { id:"preacher_curl",      name:"Preacher Curl",               group:"arms" },
+  concentration_curl: { id:"concentration_curl", name:"Concentration Curl",          group:"arms" },
+  incline_db_curl:    { id:"incline_db_curl",    name:"Incline Dumbbell Curl",       group:"arms" },
+  cable_curl:         { id:"cable_curl",         name:"Cable Curl",                  group:"arms" },
+  reverse_curl:       { id:"reverse_curl",       name:"Reverse Curl",                group:"arms" },
+  skullcrusher:       { id:"skullcrusher",       name:"Skullcrusher",                group:"arms" },
+  triceps_pushdowns:  { id:"triceps_pushdowns",  name:"Triceps Pushdowns",           group:"arms" },
+  dumbbell_extension: { id:"dumbbell_extension", name:"Dumbbell Extension",          group:"arms" },
+  overhead_tri_ext:   { id:"overhead_tri_ext",   name:"Overhead Triceps Extension",  group:"arms" },
+  close_grip_bench:   { id:"close_grip_bench",   name:"Close Grip Bench Press",      group:"arms" },
+  triceps_dips:       { id:"triceps_dips",       name:"Triceps Dips",                group:"arms" },
+  cable_kickback:     { id:"cable_kickback",     name:"Cable Triceps Kickback",      group:"arms" },
+  // ── Abs ──
+  plank:              { id:"plank",              name:"Plank",                       group:"abs" },
+  hanging_leg_raises: { id:"hanging_leg_raises", name:"Hanging Leg Raises",          group:"abs" },
+  bodyweight_exercises:{ id:"bodyweight_exercises",name:"Bodyweight Exercises",      group:"abs" },
+  crunches:           { id:"crunches",           name:"Crunches",                    group:"abs" },
+  leg_raises:         { id:"leg_raises",         name:"Leg Raises",                  group:"abs" },
+  russian_twists:     { id:"russian_twists",     name:"Russian Twists",              group:"abs" },
+  bicycle_crunches:   { id:"bicycle_crunches",   name:"Bicycle Crunches",            group:"abs" },
+  cable_crunch:       { id:"cable_crunch",       name:"Cable Crunch",                group:"abs" },
+  ab_wheel:           { id:"ab_wheel",           name:"Ab Wheel",                    group:"abs" },
+  mountain_climbers:  { id:"mountain_climbers",  name:"Mountain Climbers",           group:"abs" },
+  dead_bug:           { id:"dead_bug",           name:"Dead Bug",                    group:"abs" },
+};
+
+const SPLITS = {
+  pushPull: {
+    label: "Push / Pull",
+    days: [
+      { title:"Push",  sub:"Chest & shoulders",  main:["incline_bench","bench_press"],        other:["military_press","lateral_raises","triceps_dips","weighted_dips"] },
+      { title:"Pull",  sub:"Back & biceps",       main:["pullups_bw","lat_pulldown"],          other:["db_row","rear_delt_fly","dumbbell_curl","hammer_curl"] },
+      { title:"Legs",  sub:"Squat & posterior",   main:["squat","romanian_deadlift"],          other:["leg_press","adductors","calf_raises","hanging_leg_raises"] },
+    ],
+  },
+  upperLower: {
+    label: "Upper / Lower",
+    days: [
+      { title:"Upper A", sub:"Horizontal push & pull", main:["bench_press","pullups_bw"],       other:["incline_bench","db_row","lateral_raises","triceps_pushdowns"] },
+      { title:"Lower A", sub:"Quad focus",             main:["squat","leg_press"],              other:["bulgarian_split","leg_extension","calf_raises","adductors"] },
+      { title:"Upper B", sub:"Vertical press & pull",  main:["military_press","lat_pulldown"],  other:["arnold_press","seated_cable_rows","ez_bar_curls","skullcrusher"] },
+      { title:"Lower B", sub:"Posterior chain",        main:["deadlift","romanian_deadlift"],   other:["lying_leg_curls","hip_thrust","nordic_curl","hanging_leg_raises"] },
+    ],
+  },
+  fullBody: {
+    label: "Full Body",
+    days: [
+      { title:"Full Body A", sub:"Squat & push",    main:["squat","bench_press"],        other:["lat_pulldown","lateral_raises","ez_bar_curls","calf_raises"] },
+      { title:"Full Body B", sub:"Hinge & pull",    main:["deadlift","pullups_bw"],      other:["romanian_deadlift","incline_bench","triceps_pushdowns","plank"] },
+      { title:"Full Body C", sub:"Knee & press",    main:["leg_press","military_press"], other:["hack_squat","db_row","hammer_curl","face_pulls"] },
+      { title:"Full Body D", sub:"Power & isolate", main:["hip_thrust","weighted_dips"], other:["leg_extension","barbell_row","arnold_press","lying_leg_curls"] },
+    ],
+  },
+  custom: {
+    label: "Custom",
+    days: [],
+  },
+};
+
+function exerciseById(id) { return EXERCISES[id] ?? { id, name:id, group:"abs" }; }
+
+function getWeeklyTargets(splitKey, customDays=[]) {
+  const t = {}; MUSCLE_GROUPS.forEach(g => t[g] = 0);
+  const days = splitKey === 'custom' ? customDays : (SPLITS[splitKey]?.days || []);
+  days.forEach(d => [...(d.main||[]), ...(d.other||[])].forEach(id => {
+    const ex = exerciseById(id); if (ex.group) t[ex.group]++;
+  }));
+  return t;
+}
+
+Object.assign(window, { MUSCLE_GROUPS, MG_COLORS, MG_LABEL, DAY_COLORS, EXERCISES, SPLITS, exerciseById, getWeeklyTargets });
+</script>
+
+<!-- ═══ COMPONENTS ═══ -->
+<script type="text/babel">
+function RingStack({ progress, targets, size=260, strokeWidth=9, gap=3 }) {
+  const center = size / 2, outerR = center - strokeWidth / 2 - 2;
+  const total = Object.values(targets).reduce((a,b)=>a+b,0) || 1;
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ display:"block" }}>
+      {MUSCLE_GROUPS.map((g,i) => {
+        const r = outerR - i*(strokeWidth+gap);
+        const c = 2*Math.PI*r;
+        const done = Math.min(1, (progress[g]||0) / Math.max(1, targets[g]||1));
+        return (
+          <g key={g}>
+            <circle cx={center} cy={center} r={r} fill="none" stroke="currentColor" strokeOpacity="0.08" strokeWidth={strokeWidth}/>
+            <circle cx={center} cy={center} r={r} fill="none" stroke={MG_COLORS[g]} strokeWidth={strokeWidth} strokeLinecap="round"
+              strokeDasharray={`${c*done} ${c}`} transform={`rotate(-90 ${center} ${center})`}
+              style={{ transition:"stroke-dasharray 700ms cubic-bezier(.2,.8,.2,1)" }}/>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+function GroupKey({ progress, targets }) {
+  return (
+    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"6px 14px", fontFamily:"var(--font-mono)", fontSize:10.5, letterSpacing:0.06, textTransform:"uppercase" }}>
+      {MUSCLE_GROUPS.map(g => (
+        <div key={g} style={{ display:"flex", alignItems:"center", gap:6, color:"var(--ink-60)" }}>
+          <span style={{ width:6, height:6, borderRadius:999, background:MG_COLORS[g], flexShrink:0 }}/>
+          <span style={{ flex:1, color:"var(--ink)" }}>{MG_LABEL[g]}</span>
+          <span style={{ fontVariantNumeric:"tabular-nums" }}>{progress[g]||0}<span style={{ opacity:0.5 }}>/{targets[g]||0}</span></span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const REPS_GUIDE = { legs:"6-10", back:"8-12", chest:"8-12", arms:"10-15", shoulders:"10-15", abs:"15-20" };
+const SETS_MAIN = 4, SETS_ACC = 3;
+const { useState: useStateComp } = React;
+
+function ExerciseRow({ ex, checked, onToggle, dashed=false, isMain=false, setsDone=0, setsTarget=3, onSetAdd, onRemove, detailedMode=false, detailedEntries=[], onAddSetEntry, onEditSetEntry, onDeleteSetEntry }) {
+  const [repInput, setRepInput] = useStateComp("");
+  const [kgInput, setKgInput] = useStateComp("");
+  const [editingIndex, setEditingIndex] = useStateComp(null);
+  const reps = REPS_GUIDE[ex.group] || "8-12";
+  const startEdit = (i, e) => { setEditingIndex(i); setRepInput(String(e.reps)); setKgInput(String(e.kg)); };
+  const cancelEdit = () => { setEditingIndex(null); setRepInput(""); setKgInput(""); };
+  const handleOk = () => {
+    const r = parseInt(editingIndex !== null ? repInput : (repInput || reps.split('-')[0]));
+    const k = parseFloat(kgInput.replace(',', '.'));
+    if (!r || isNaN(r) || isNaN(k) || k <= 0) return;
+    if (editingIndex !== null) {
+      onEditSetEntry && onEditSetEntry(editingIndex, { reps:r, kg:k });
+      cancelEdit();
+    } else {
+      onAddSetEntry && onAddSetEntry({ reps:r, kg:k });
+      setKgInput("");
+    }
+    if (checked) onToggle && onToggle();
+  };
+  return (
+    <div style={{ borderTop: dashed ? "1px dashed var(--rule)" : "1px solid var(--rule)", padding:"11px 0 8px" }}>
+      <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+        <button onClick={onToggle} style={{
+          width:22, height:22, borderRadius:5, flexShrink:0, transition:"all 180ms", cursor:"pointer",
+          border: checked ? "none" : `1.5px solid ${isMain ? MG_COLORS[ex.group] : "var(--ink-30)"}`,
+          background: checked ? MG_COLORS[ex.group] : "transparent",
+          display:"flex", alignItems:"center", justifyContent:"center",
+        }}>
+          {checked && <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6.5l2.5 2.5L10 3.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+        </button>
+        <div style={{ flex:1, minWidth:0 }}>
+          <div style={{
+            fontFamily:"var(--font-display)", fontSize: isMain ? 20 : 17, letterSpacing:-0.2,
+            color: checked ? "var(--ink-60)" : "var(--ink)",
+            textDecoration: checked ? "line-through" : "none", textDecorationThickness:"1px", lineHeight:1.1,
+          }}>{ex.name}</div>
+          <div style={{ fontFamily:"var(--font-mono)", fontSize:9.5, letterSpacing:0.08, color:"var(--ink-60)", textTransform:"uppercase", marginTop:2, display:"flex", gap:8, alignItems:"center" }}>
+            <span style={{ color:MG_COLORS[ex.group] }}>◆ {MG_LABEL[ex.group]}</span>
+            {isMain && <span style={{ color:"var(--ink-30)" }}>· MAIN</span>}
+            {dashed && <span style={{ color:"var(--ink-30)" }}>· ADDED</span>}
+          </div>
+        </div>
+        {onRemove && (
+          <button onClick={onRemove} title="Remove" style={{ width:22, height:22, background:"transparent", border:"1px solid var(--rule)", color:"var(--ink-60)", cursor:"pointer", fontFamily:"var(--font-mono)", fontSize:12, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>×</button>
+        )}
+      </div>
+      {detailedMode && onAddSetEntry && (
+        <div style={{ marginTop:10, paddingLeft:34 }}>
+          {detailedEntries.map((e, i) => {
+            const isEditing = editingIndex === i;
+            return (
+              <div key={i} style={{ display:"flex", alignItems:"center", gap:7, marginBottom:5 }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <circle cx="7" cy="7" r="6" fill={isEditing ? "var(--accent)" : checked ? "var(--ink-30)" : "var(--success)"} opacity="0.18"/>
+                  <path d="M4 7.5l2 2 4-4" stroke={isEditing ? "var(--accent)" : checked ? "var(--ink-30)" : "var(--success)"} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span onClick={() => !checked && startEdit(i, e)} style={{ fontFamily:"var(--font-mono)", fontSize:11, color: isEditing ? "var(--accent)" : checked ? "var(--ink-60)" : "var(--success)", fontVariantNumeric:"tabular-nums", flex:1, cursor: checked ? "default" : "pointer" }}>Set {i+1} · {e.reps} reps × {e.kg} kg</span>
+                {!checked && <button onClick={() => { onDeleteSetEntry && onDeleteSetEntry(i); if(isEditing) cancelEdit(); }} style={{ background:"transparent", border:"none", color:"var(--ink-30)", cursor:"pointer", fontFamily:"var(--font-mono)", fontSize:13, padding:"0 2px", lineHeight:1, flexShrink:0 }}>×</button>}
+              </div>
+            );
+          })}
+          <div style={{ display:"flex", gap:6, alignItems:"center", marginTop:4, opacity: checked ? 0.35 : 1, pointerEvents: checked ? "none" : "auto", transition:"opacity 200ms" }}>
+            <input type="number" inputMode="numeric" placeholder={reps.split('-')[0]} value={repInput} onChange={e=>setRepInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleOk()} disabled={checked}
+              style={{ width:52, fontFamily:"var(--font-mono)", fontSize:13, padding:"6px 8px", border:`1px solid ${editingIndex!==null?"var(--accent)":"var(--ink-30)"}`, background:"transparent", color:"var(--ink)", outline:"none", textAlign:"center", boxSizing:"border-box" }}/>
+            <span style={{ fontFamily:"var(--font-mono)", fontSize:10, color:"var(--ink-60)" }}>reps ×</span>
+            <input type="text" inputMode="decimal" placeholder="kg" value={kgInput} onChange={e=>{ const v=e.target.value; if(v===''||/^[\d]*[.,]?[\d]*$/.test(v)) setKgInput(v); }} onKeyDown={e=>e.key==="Enter"&&handleOk()} disabled={checked}
+              style={{ width:52, fontFamily:"var(--font-mono)", fontSize:13, padding:"6px 8px", border:`1px solid ${editingIndex!==null?"var(--accent)":"var(--ink-30)"}`, background:"transparent", color:"var(--ink)", outline:"none", textAlign:"center", boxSizing:"border-box" }}/>
+            <button onClick={handleOk} disabled={checked} style={{ fontFamily:"var(--font-mono)", fontSize:9.5, letterSpacing:0.12, textTransform:"uppercase", padding:"6px 12px", background: editingIndex!==null ? "var(--accent)" : "var(--ink)", color:"var(--paper)", border:"none", cursor: checked ? "default" : "pointer", flexShrink:0 }}>{editingIndex!==null ? "Save" : "OK"}</button>
+            {editingIndex!==null && <button onClick={cancelEdit} style={{ fontFamily:"var(--font-mono)", fontSize:11, padding:"6px 8px", background:"transparent", color:"var(--ink-60)", border:"1px solid var(--rule)", cursor:"pointer", flexShrink:0 }}>✕</button>}
+            {editingIndex===null && detailedEntries.length > 0 && <span style={{ fontFamily:"var(--font-mono)", fontSize:9, color:"var(--ink-60)", letterSpacing:0.08 }}>{detailedEntries.length} sets</span>}
+          </div>
+        </div>
+      )}
+      {!detailedMode && onSetAdd && (
+        <div style={{ marginTop:8, display:"flex", alignItems:"center", gap:8, paddingLeft:34 }}>
+          <span style={{ fontFamily:"var(--font-mono)", fontSize:9, color:"var(--ink-60)", letterSpacing:0.1, minWidth:40 }}>{reps} reps</span>
+          <div style={{ display:"flex", gap:4 }}>
+            {Array.from({ length: setsTarget }).map((_, i) => {
+              const done = i < setsDone;
+              return (
+                <button key={i} onClick={onSetAdd} title={`Set ${i+1}`} style={{
+                  width:24, height:24, borderRadius:4, cursor:"pointer", transition:"all 140ms",
+                  background: done ? MG_COLORS[ex.group] : "transparent",
+                  border: `1.5px solid ${done ? MG_COLORS[ex.group] : "var(--ink-30)"}`,
+                  display:"flex", alignItems:"center", justifyContent:"center",
+                }}>
+                  {done && <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2 2.5L8.5 2" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                </button>
+              );
+            })}
+          </div>
+          <span style={{ fontFamily:"var(--font-mono)", fontSize:9, color: setsDone>=setsTarget?"var(--success)":"var(--ink-60)", letterSpacing:0.1 }}>{setsDone}/{setsTarget} sets</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Rule({ label, style={} }) {
+  return (
+    <div style={{ display:"flex", alignItems:"center", gap:10, fontFamily:"var(--font-mono)", fontSize:10, letterSpacing:0.14, textTransform:"uppercase", color:"var(--ink-60)", margin:"20px 0 10px", ...style }}>
+      <span style={{ whiteSpace:"nowrap" }}>{label}</span>
+      <span style={{ flex:1, height:1, background:"var(--rule)" }}/>
+    </div>
+  );
+}
+
+function DayCard({ day, plan, dayColor, completed, total, isCurrent, isDone, onClick, onRemove }) {
+  const pct = total ? completed/total : 0;
+  const subtitle = (plan.main && plan.main.length > 0) ? plan.main.map(id=>exerciseById(id).name).join(" · ") : (plan.sub || "");
+  const bg = isCurrent ? "var(--ink)" : isDone ? "oklch(0.72 0.16 55)" : "transparent";
+  const fg = (isCurrent || isDone) ? (isDone ? "oklch(0.18 0.04 55)" : "var(--paper)") : "var(--ink)";
+  const fgMuted = isCurrent ? "var(--current-muted)" : isDone ? "oklch(0.32 0.06 55)" : "var(--ink-60)";
+  const borderCol = isCurrent ? "var(--ink)" : isDone ? "oklch(0.62 0.18 55)" : "var(--rule)";
+  return (
+    <button onClick={onClick} style={{
+      textAlign:"left", cursor:"pointer", width:"100%",
+      background: bg, color: fg,
+      border: `1px solid ${borderCol}`,
+      borderRadius:0, padding:"14px 14px 16px",
+      display:"flex", flexDirection:"column", gap:4, fontFamily:"var(--font-body)",
+      transition:"background 300ms, border-color 300ms",
+    }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+          <span style={{ width:10, height:10, borderRadius:999, background: isDone ? "oklch(0.18 0.04 55)" : dayColor, flexShrink:0 }}/>
+          <div style={{ fontFamily:"var(--font-mono)", fontSize:9.5, letterSpacing:0.18, textTransform:"uppercase", color: fgMuted }}>Day {day}</div>
+        </div>
+        <div style={{ display:"flex", alignItems:"center", gap:5 }}>
+          {isDone && <span style={{ fontFamily:"var(--font-mono)", fontSize:9, letterSpacing:0.18, textTransform:"uppercase", color: fgMuted, border:`1px solid ${fgMuted}`, borderRadius:2, padding:"2px 5px" }}>Done</span>}
+          {!isDone && isCurrent && <span style={{ fontFamily:"var(--font-mono)", fontSize:9, letterSpacing:0.18, textTransform:"uppercase", color:"var(--paper)", border:"1px solid var(--current-muted)", borderRadius:2, padding:"2px 5px" }}>Today</span>}
+          {onRemove && <span onClick={e=>{e.stopPropagation();onRemove();}} style={{ width:18,height:18,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"var(--font-mono)",fontSize:13,color:fgMuted,background:"rgba(128,128,128,0.2)",borderRadius:2,cursor:"pointer",flexShrink:0 }}>×</span>}
+        </div>
+      </div>
+      <div style={{ fontFamily:"var(--font-display)", fontSize:15, letterSpacing:-0.1, lineHeight:1.15, marginTop:6 }}>{plan.title}</div>
+      <div style={{ fontFamily:"var(--font-mono)", fontSize:10, letterSpacing:0.08, textTransform:"uppercase", color: fgMuted, marginTop:2 }}>{subtitle}</div>
+      <div style={{ height:2, background: isDone ? "rgba(0,0,0,0.15)" : isCurrent ? "var(--current-track)" : "var(--rule)", marginTop:10, position:"relative" }}>
+        <div style={{ position:"absolute", left:0, top:0, bottom:0, width:`${pct*100}%`, background: isDone ? "oklch(0.18 0.04 55)" : isCurrent ? "var(--paper)" : "var(--accent)", transition:"width 400ms ease" }}/>
+      </div>
+      <div style={{ fontFamily:"var(--font-mono)", fontSize:9.5, letterSpacing:0.08, textTransform:"uppercase", color: fgMuted, marginTop:2 }}>{completed}/{total} · {Math.round(pct*100)}%</div>
+    </button>
+  );
+}
+
+Object.assign(window, { RingStack, GroupKey, ExerciseRow, Rule, DayCard });
+</script>
+
+<!-- ═══ SCREENS ═══ -->
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+function computeProgress(completions) {
+  const p = {}; MUSCLE_GROUPS.forEach(g => p[g]=0);
+  completions.forEach(c => { const ex=exerciseById(c.id); if(ex.group) p[ex.group]++; });
+  return p;
+}
+
+// ── Body Map — detailed anatomical illustration style ──
+function BodyMap({ intensities={} }) {
+  const opa = g => { const i=intensities[g]||0; return i===0?0:0.22+i*0.68; };
+  const mc = g => MG_COLORS[g];
+  const F = (g, a=1) => ({ fill:opa(g)>0?mc(g):'none', fillOpacity:opa(g)*a, stroke:'var(--ink)', strokeWidth:0.6, strokeLinejoin:'round', strokeLinecap:'round' });
+  const O = { fill:'var(--paper)', stroke:'var(--ink)', strokeWidth:1.0, strokeLinejoin:'round', strokeLinecap:'round' };
+  const D = { fill:'none', stroke:'var(--ink)', strokeWidth:0.38, strokeOpacity:0.4, strokeLinejoin:'round', strokeLinecap:'round' };
+
+  // Full-body silhouette — organic bezier curves, arms slightly away from torso
+  const Silhouette = () => <>
+    {/* Head */}
+    <path {...O} d="M60 3 C70 3 78 10 78 19 C78 28 72 35 66 37 L66 42 L54 42 L54 37 C48 35 42 28 42 19 C42 10 50 3 60 3Z"/>
+    <path {...D} d="M54 28 C55 32 65 32 66 28"/>
+    <path {...D} d="M54 22 C52 22 50 20 51 18"/> <path {...D} d="M66 22 C68 22 70 20 69 18"/>
+    {/* Neck + trapezius slope */}
+    <path {...O} d="M54 42 C50 44 42 48 34 54 C28 58 22 66 20 76 L20 82 C26 76 30 68 34 64 C38 60 44 56 52 53 L52 42Z"/>
+    <path {...O} d="M66 42 C70 44 78 48 86 54 C92 58 98 66 100 76 L100 82 C94 76 90 68 86 64 C82 60 76 56 68 53 L68 42Z"/>
+    {/* Torso */}
+    <path {...O} d="M52 53 C46 56 38 62 34 70 L30 80 L28 100 L28 118 C28 128 30 136 36 142 L44 146 L76 146 L84 142 C90 136 92 128 92 118 L92 100 L90 80 L86 70 C82 62 74 56 68 53 L66 42 L54 42Z"/>
+    {/* Left upper arm */}
+    <path {...O} d="M20 76 C14 82 10 94 9 108 L8 128 C8 138 10 148 13 156 L16 168 C18 174 20 178 22 180 L26 183 C28 183 30 181 30 179 L28 168 L28 152 C28 140 28 128 28 116 L28 100 L28 82 Z"/>
+    {/* Left forearm */}
+    <path {...O} d="M22 180 C20 186 18 196 18 206 L18 222 C18 228 19 232 21 234 L24 236 C26 237 28 235 29 232 L30 218 L30 204 C30 196 30 188 30 182 L26 183Z"/>
+    {/* Left hand */}
+    <path {...O} strokeWidth={0.7} d="M18 222 C17 228 17 234 19 238 L22 240 C24 241 27 239 28 236 L29 232 L24 236Z"/>
+    {/* Right upper arm */}
+    <path {...O} d="M100 76 C106 82 110 94 111 108 L112 128 C112 138 110 148 107 156 L104 168 C102 174 100 178 98 180 L94 183 C92 183 90 181 90 179 L92 168 L92 152 C92 140 92 128 92 116 L92 100 L92 82Z"/>
+    {/* Right forearm */}
+    <path {...O} d="M98 180 C100 186 102 196 102 206 L102 222 C102 228 101 232 99 234 L96 236 C94 237 92 235 91 232 L90 218 L90 204 C90 196 90 188 90 182 L94 183Z"/>
+    {/* Right hand */}
+    <path {...O} strokeWidth={0.7} d="M102 222 C103 228 103 234 101 238 L98 240 C96 241 93 239 92 236 L91 232 L96 236Z"/>
+    {/* Left thigh */}
+    <path {...O} d="M36 146 L52 146 C54 160 56 178 56 196 L54 218 C52 228 50 234 48 238 L44 242 L38 242 C34 240 32 234 32 226 L30 206 C28 192 28 174 32 158Z"/>
+    {/* Left knee */}
+    <path {...O} d="M32 226 C30 232 30 240 32 246 L36 250 L46 250 L50 246 C52 240 52 232 50 226 L44 242 L38 242Z"/>
+    {/* Left shin+calf */}
+    <path {...O} d="M32 246 C30 256 30 268 32 278 L36 288 L44 290 L48 288 C50 278 50 264 50 252 L50 246 L46 250 L36 250Z"/>
+    {/* Left foot */}
+    <path {...O} strokeWidth={0.7} d="M32 278 C30 284 30 292 34 296 L44 298 L50 294 L50 288 L44 290 L36 288Z"/>
+    {/* Right thigh */}
+    <path {...O} d="M84 146 L68 146 C66 160 64 178 64 196 L66 218 C68 228 70 234 72 238 L76 242 L82 242 C86 240 88 234 88 226 L90 206 C92 192 92 174 88 158Z"/>
+    {/* Right knee */}
+    <path {...O} d="M88 226 C90 232 90 240 88 246 L84 250 L74 250 L70 246 C68 240 68 232 70 226 L76 242 L82 242Z"/>
+    {/* Right shin+calf */}
+    <path {...O} d="M88 246 C90 256 90 268 88 278 L84 288 L76 290 L72 288 C70 278 70 264 70 252 L70 246 L74 250 L84 250Z"/>
+    {/* Right foot */}
+    <path {...O} strokeWidth={0.7} d="M88 278 C90 284 90 292 86 296 L76 298 L70 294 L70 288 L76 290 L84 288Z"/>
+  </>;
+
+  return (
+    <div style={{display:'flex',gap:6,justifyContent:'center',alignItems:'flex-start'}}>
+
+      {/* ── FRONT ── */}
+      <div style={{textAlign:'center'}}>
+        <svg viewBox="0 0 120 305" width={115} height={195} style={{display:'block'}}>
+          <Silhouette/>
+          {/* Trapezius (front) */}
+          <path {...F('back',0.5)} d="M54 42 C50 44 42 48 34 56 L44 54 L52 50Z"/>
+          <path {...F('back',0.5)} d="M66 42 C70 44 78 48 86 56 L76 54 L68 50Z"/>
+          {/* Anterior deltoid */}
+          <path {...F('shoulders')} d="M20 76 C14 84 12 96 14 108 L20 106 C22 94 24 84 28 78Z"/>
+          <path {...F('shoulders')} d="M100 76 C106 84 108 96 106 108 L100 106 C98 94 96 84 92 78Z"/>
+          {/* Pectoralis major */}
+          <path {...F('chest')} d="M34 64 C36 72 46 80 56 84 L56 96 C44 94 34 86 30 76 C28 70 30 66 34 64Z"/>
+          <path {...F('chest')} d="M86 64 C84 72 74 80 64 84 L64 96 C76 94 86 86 90 76 C92 70 90 66 86 64Z"/>
+          <line {...D} x1="60" y1="60" x2="60" y2="98"/>
+          <path {...D} d="M56 70 C50 66 42 62 36 62"/><path {...D} d="M56 80 C48 78 40 74 34 72"/>
+          <path {...D} d="M64 70 C70 66 78 62 84 62"/><path {...D} d="M64 80 C72 78 80 74 86 72"/>
+          {/* Serratus anterior */}
+          <path {...F('abs',0.45)} d="M28 96 C26 104 26 112 28 118 L32 116 L30 106Z"/>
+          <path {...F('abs',0.45)} d="M92 96 C94 104 94 112 92 118 L88 116 L90 106Z"/>
+          <path {...D} d="M28 100 C32 98 34 96 36 95"/><path {...D} d="M28 108 C32 106 36 104 38 102"/>
+          <path {...D} d="M92 100 C88 98 86 96 84 95"/><path {...D} d="M92 108 C88 106 84 104 82 102"/>
+          {/* Rectus abdominis */}
+          <path {...F('abs')} d="M44 98 C44 98 56 98 56 98 L56 112 C56 112 44 112 44 112Z" rx="3"/>
+          <path {...F('abs')} d="M64 98 L76 98 L76 112 L64 112Z" rx="3"/>
+          <path {...F('abs')} d="M44 114 L56 114 L56 126 L44 126Z" rx="3"/>
+          <path {...F('abs')} d="M64 114 L76 114 L76 126 L64 126Z" rx="3"/>
+          <path {...F('abs')} d="M44 128 L56 128 L56 140 L44 140Z" rx="3"/>
+          <path {...F('abs')} d="M64 128 L76 128 L76 140 L64 140Z" rx="3"/>
+          <line {...D} x1="60" y1="98" x2="60" y2="142"/>
+          <line {...D} x1="42" y1="112" x2="78" y2="112"/>
+          <line {...D} x1="42" y1="126" x2="78" y2="126"/>
+          {/* Obliques */}
+          <path {...F('abs',0.6)} d="M28 100 C28 112 30 124 34 134 L40 138 L42 128 L40 116 L36 104Z"/>
+          <path {...F('abs',0.6)} d="M92 100 C92 112 90 124 86 134 L80 138 L78 128 L80 116 L84 104Z"/>
+          {/* Biceps */}
+          <path {...F('arms')} d="M10 92 C9 104 9 118 11 130 L14 138 L18 136 L18 120 L16 106 L14 92Z"/>
+          <path {...F('arms')} d="M110 92 C111 104 111 118 109 130 L106 138 L102 136 L102 120 L104 106 L106 92Z"/>
+          <path {...D} d="M10 96 C10 108 11 120 13 130"/><path {...D} d="M110 96 C110 108 109 120 107 130"/>
+          {/* Brachialis */}
+          <path {...F('arms',0.6)} d="M14 130 C12 140 12 152 14 162 L18 168 L22 166 L22 154 L20 140 L18 132Z"/>
+          <path {...F('arms',0.6)} d="M106 130 C108 140 108 152 106 162 L102 168 L98 166 L98 154 L100 140 L102 132Z"/>
+          <path {...D} d="M13 134 C12 146 12 156 14 164"/><path {...D} d="M107 134 C108 146 108 156 106 164"/>
+          {/* Forearm flexors */}
+          <path {...F('arms',0.5)} d="M18 170 C16 180 16 196 18 208 L22 216 L26 214 L26 200 L24 184 L22 174Z"/>
+          <path {...F('arms',0.5)} d="M102 170 C104 180 104 196 102 208 L98 216 L94 214 L94 200 L96 184 L98 174Z"/>
+          {/* Quads */}
+          <path {...F('legs')} d="M32 158 C30 172 30 190 32 206 L36 218 L40 222 L44 220 L46 206 L46 190 L44 172 L42 158Z"/>
+          <path {...F('legs')} d="M42 158 C44 172 46 188 46 204 L44 220 L50 224 L54 220 L56 206 L56 188 L54 170 L50 158Z"/>
+          <path {...F('legs')} d="M88 158 C90 172 90 190 88 206 L84 218 L80 222 L76 220 L74 206 L74 190 L76 172 L78 158Z"/>
+          <path {...F('legs')} d="M78 158 C76 172 74 188 74 204 L76 220 L70 224 L66 220 L64 206 L64 188 L66 170 L70 158Z"/>
+          <path {...D} d="M36 160 C34 178 34 198 36 214"/><path {...D} d="M46 160 C46 178 46 196 48 210"/>
+          <path {...D} d="M84 160 C86 178 86 198 84 214"/><path {...D} d="M74 160 C74 178 74 196 72 210"/>
+          {/* VMO teardrop */}
+          <ellipse {...F('legs',0.8)} cx="42" cy="228" rx="8" ry="10"/>
+          <ellipse {...F('legs',0.8)} cx="78" cy="228" rx="8" ry="10"/>
+          {/* Tibialis anterior */}
+          <path {...F('legs',0.5)} d="M32 250 C30 262 30 274 32 282 L36 286 L40 284 L40 270 L38 256Z"/>
+          <path {...F('legs',0.5)} d="M88 250 C90 262 90 274 88 282 L84 286 L80 284 L80 270 L82 256Z"/>
+          <path {...D} d="M33 254 C32 266 32 276 34 284"/><path {...D} d="M87 254 C88 266 88 276 86 284"/>
+        </svg>
+        <div style={{fontFamily:'var(--font-mono)',fontSize:7.5,letterSpacing:0.18,textTransform:'uppercase',color:'var(--ink-60)',marginTop:4}}>Front</div>
+      </div>
+
+      {/* ── BACK ── */}
+      <div style={{textAlign:'center'}}>
+        <svg viewBox="0 0 120 305" width={115} height={195} style={{display:'block'}}>
+          <Silhouette/>
+          {/* Trapezius upper */}
+          <path {...F('back',0.8)} d="M54 42 C50 46 42 52 36 58 L46 60 L54 54 L60 52 L66 54 L74 60 L84 58 C78 52 70 46 66 42Z"/>
+          {/* Trapezius middle */}
+          <path {...F('back',0.7)} d="M36 58 C32 64 30 72 30 80 L38 76 L46 72 L54 70 L60 68 L66 70 L74 72 L82 76 L90 80 C90 72 88 64 84 58 L74 60 L60 52Z"/>
+          <line {...D} x1="60" y1="52" x2="60" y2="96"/>
+          <path {...D} d="M54 58 C48 62 42 64 36 64"/><path {...D} d="M54 68 C48 70 42 72 38 74"/>
+          <path {...D} d="M66 58 C72 62 78 64 84 64"/><path {...D} d="M66 68 C72 70 78 72 82 74"/>
+          {/* Infraspinatus / rhomboids */}
+          <path {...F('back',0.6)} d="M38 76 C34 82 32 92 34 100 L40 96 L44 88 L46 78Z"/>
+          <path {...F('back',0.6)} d="M82 76 C86 82 88 92 86 100 L80 96 L76 88 L74 78Z"/>
+          <path {...F('back',0.55)} d="M42 78 C42 84 44 92 46 98 L54 96 L56 88 L54 80Z"/>
+          <path {...F('back',0.55)} d="M78 78 C78 84 76 92 74 98 L66 96 L64 88 L66 80Z"/>
+          {/* Teres major */}
+          <path {...F('back',0.65)} d="M30 82 C24 90 20 100 20 110 L26 106 L32 96 L34 86Z"/>
+          <path {...F('back',0.65)} d="M90 82 C96 90 100 100 100 110 L94 106 L88 96 L86 86Z"/>
+          {/* Posterior deltoid */}
+          <path {...F('shoulders')} d="M20 76 C14 84 12 96 14 108 L20 106 C22 94 24 84 28 80Z"/>
+          <path {...F('shoulders')} d="M100 76 C106 84 108 96 106 108 L100 106 C98 94 96 84 92 80Z"/>
+          {/* Latissimus dorsi */}
+          <path {...F('back',0.9)} d="M30 80 C24 90 22 106 24 120 L28 136 L36 142 L44 142 L42 124 L40 106 L36 90Z"/>
+          <path {...F('back',0.9)} d="M90 80 C96 90 98 106 96 120 L92 136 L84 142 L76 142 L78 124 L80 106 L84 90Z"/>
+          <path {...D} d="M30 88 C26 100 24 114 26 126"/><path {...D} d="M36 86 C34 100 34 116 36 130"/>
+          <path {...D} d="M90 88 C94 100 96 114 94 126"/><path {...D} d="M84 86 C86 100 86 116 84 130"/>
+          {/* Erector spinae */}
+          <rect {...F('back',0.6)} x="54" y="96" width="5" height="46" rx="2.5"/>
+          <rect {...F('back',0.6)} x="61" y="96" width="5" height="46" rx="2.5"/>
+          <path {...D} d="M56 100 C56 118 56 132 56 142"/><path {...D} d="M64 100 C64 118 64 132 64 142"/>
+          {/* Triceps */}
+          <path {...F('arms')} d="M10 92 C9 104 9 118 11 130 L14 138 L18 136 L18 120 L16 106 L14 92Z"/>
+          <path {...F('arms')} d="M110 92 C111 104 111 118 109 130 L106 138 L102 136 L102 120 L104 106 L106 92Z"/>
+          <path {...D} d="M11 96 C10 110 10 122 12 132"/><path {...D} d="M16 94 C16 108 16 122 16 134"/>
+          <path {...D} d="M109 96 C110 110 110 122 108 132"/><path {...D} d="M104 94 C104 108 104 122 104 134"/>
+          {/* Forearm extensors */}
+          <path {...F('arms',0.5)} d="M18 170 C16 180 16 196 18 208 L22 216 L26 214 L26 200 L24 184 L22 174Z"/>
+          <path {...F('arms',0.5)} d="M102 170 C104 180 104 196 102 208 L98 216 L94 214 L94 200 L96 184 L98 174Z"/>
+          {/* Gluteus maximus */}
+          <path {...F('legs',0.95)} d="M32 148 C28 158 28 172 30 184 L36 190 L44 192 L52 188 L56 178 L56 162 L52 150Z"/>
+          <path {...F('legs',0.95)} d="M88 148 C92 158 92 172 90 184 L84 190 L76 192 L68 188 L64 178 L64 162 L68 150Z"/>
+          <line {...D} x1="60" y1="148" x2="60" y2="194"/>
+          <path {...D} d="M36 154 C32 164 30 176 32 186"/><path {...D} d="M52 152 C52 164 52 178 52 188"/>
+          <path {...D} d="M84 154 C88 164 90 176 88 186"/><path {...D} d="M68 152 C68 164 68 178 68 188"/>
+          {/* Hamstrings */}
+          <path {...F('legs')} d="M30 184 C28 198 28 216 30 230 L34 240 L38 242 L44 240 L46 228 L46 210 L44 194 L38 190Z"/>
+          <path {...F('legs')} d="M90 184 C92 198 92 216 90 230 L86 240 L82 242 L76 240 L74 228 L74 210 L76 194 L82 190Z"/>
+          <path {...D} d="M32 188 C30 204 30 220 32 234"/><path {...D} d="M44 192 C44 208 44 224 44 238"/>
+          <path {...D} d="M88 188 C90 204 90 220 88 234"/><path {...D} d="M76 192 C76 208 76 224 76 238"/>
+          {/* Gastrocnemius (calf) */}
+          <path {...F('legs',0.85)} d="M30 246 C28 258 28 272 30 282 L34 288 L38 290 L44 290 L48 286 L50 274 L50 258 L48 246 L44 242Z"/>
+          <path {...F('legs',0.85)} d="M90 246 C92 258 92 272 90 282 L86 288 L82 290 L76 290 L72 286 L70 274 L70 258 L72 246 L76 242Z"/>
+          <path {...D} d="M32 252 C30 264 30 276 32 284"/><path {...D} d="M46 250 C48 262 48 274 46 284"/>
+          <path {...D} d="M88 252 C90 264 90 276 88 284"/><path {...D} d="M74 250 C72 262 72 274 74 284"/>
+        </svg>
+        <div style={{fontFamily:'var(--font-mono)',fontSize:7.5,letterSpacing:0.18,textTransform:'uppercase',color:'var(--ink-60)',marginTop:4}}>Back</div>
+      </div>
+    </div>
+  );
+}
+
+// ── Dashboard ──
+function Dashboard({ state, dispatch, navigate, setShowPaywall }) {
+  const { activeSplit, completions, completedDays, customPlan, detailedMode, extraDays={} } = state;
+  const isCustom = activeSplit === 'custom';
+  const splitData = isCustom ? customPlan : SPLITS[activeSplit];
+  const splitCompletions = completions[activeSplit] || [];
+  const splitCompletedDays = completedDays[activeSplit] || [];
+  const progress = computeProgress(splitCompletions);
+  const targets = getWeeklyTargets(activeSplit, customPlan?.days || []);
+  const totalDone = Object.values(progress).reduce((a,b)=>a+b,0);
+  const totalTarget = Object.values(targets).reduce((a,b)=>a+b,0);
+  const today = new Date();
+  const weekday = ["SUN","MON","TUE","WED","THU","FRI","SAT"][today.getDay()];
+  const dateStr = `${weekday} · ${today.toLocaleDateString("en-US",{month:"short",day:"numeric"}).toUpperCase()}`;
+  const hasExtraDay = !isCustom && extraDays[activeSplit]?.enabled;
+  const totalDays = splitData.days.length + (hasExtraDay ? 1 : 0);
+  let currentDay = totalDays;
+  for (let i=0; i<splitData.days.length; i++) {
+    if (!splitCompletedDays.includes(i+1)) { currentDay = i+1; break; }
+  }
+  if (currentDay > splitData.days.length && hasExtraDay && !splitCompletedDays.includes(totalDays)) currentDay = totalDays;
+
+  return (
+    <div style={{ padding:"8px 24px 100px", fontFamily:"var(--font-body)", color:"var(--ink)" }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", paddingTop:8 }}>
+        <div>
+          <div style={{ fontFamily:"var(--font-mono)", fontSize:10, letterSpacing:0.18, textTransform:"uppercase", color:"var(--ink-60)" }}>{dateStr}</div>
+          <div style={{ fontFamily:"var(--font-display)", fontSize:42, lineHeight:0.95, letterSpacing:-0.035, marginTop:10, fontWeight:400 }}>
+            <span style={{ fontStyle:"italic" }}>Training</span> Log
+          </div>
+        </div>
+        <div style={{ display:"flex", gap:8, paddingTop:6 }}>
+          <button onClick={() => dispatch({ type:"TOGGLE_THEME" })} title={state.theme==='ink'?"Light mode":"Dark mode"}
+            style={{ width:36, height:36, background:"transparent", border:"1px solid var(--rule)", cursor:"pointer", color:"var(--ink-60)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+            {state.theme==='ink'
+              ? <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor"/><line x1="8" y1="1.5" x2="8" y2="3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><line x1="8" y1="13" x2="8" y2="14.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><line x1="1.5" y1="8" x2="3" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><line x1="13" y1="8" x2="14.5" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><line x1="3.4" y1="3.4" x2="4.4" y2="4.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><line x1="11.6" y1="11.6" x2="12.6" y2="12.6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><line x1="3.4" y1="12.6" x2="4.4" y2="11.6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><line x1="11.6" y1="4.4" x2="12.6" y2="3.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+              : <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 9.5A6 6 0 0 1 6.5 2.5a5.5 5.5 0 1 0 7 7z" fill="currentColor"/></svg>
+            }
+          </button>
+          <button onClick={() => navigate({screen:'analytics'})} title="Analytics"
+            style={{ width:36, height:36, background:"transparent", border:"1px solid var(--rule)", cursor:"pointer", color:"var(--ink-60)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="9" width="2.5" height="5" rx="1" fill="currentColor"/><rect x="6.75" y="6" width="2.5" height="8" rx="1" fill="currentColor"/><rect x="11.5" y="3" width="2.5" height="11" rx="1" fill="currentColor"/></svg>
+          </button>
+          <button onClick={() => navigate({screen:'profile'})} title="Profile"
+            style={{ width:36, height:36, background:"transparent", border:"1px solid var(--rule)", cursor:"pointer", color:"var(--ink-60)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5.5" r="3" stroke="currentColor" strokeWidth="1.4"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Split toggle */}
+      <div style={{ display:"flex", gap:5, marginTop:16, flexWrap:"wrap" }}>
+        {Object.entries(SPLITS).map(([key, s]) => (
+          <button key={key} onClick={() => dispatch({ type:"SET_SPLIT", split:key })}
+            style={{ flex:"1 1 auto", fontFamily:"var(--font-mono)", fontSize:9, letterSpacing:0.1, textTransform:"uppercase", padding:"8px 3px",
+              background: activeSplit===key ? "var(--ink)" : "transparent", color: activeSplit===key ? "var(--paper)" : "var(--ink)",
+              border:"1px solid var(--ink)", borderRadius:0, cursor:"pointer" }}>{s.label}</button>
+        ))}
+      </div>
+
+      {/* Tracking mode toggle */}
+      <div style={{ marginTop:10, display:"flex", justifyContent:"flex-end", alignItems:"center", gap:8 }}>
+        <span style={{ fontFamily:"var(--font-mono)", fontSize:9.5, letterSpacing:0.12, textTransform:"uppercase", color:"var(--ink-60)" }}>Tracking</span>
+        <button onClick={() => dispatch({ type:"TOGGLE_DETAILED" })}
+          style={{ fontFamily:"var(--font-mono)", fontSize:9.5, letterSpacing:0.1, textTransform:"uppercase", padding:"4px 10px",
+            background: detailedMode ? "var(--accent)" : "transparent", color: detailedMode ? "#fff" : "var(--ink-60)",
+            border:`1px solid ${detailedMode?"var(--accent)":"var(--ink-30)"}`, borderRadius:0, cursor:"pointer" }}>
+          {detailedMode ? "Detailed" : "Simple"}
+        </button>
+      </div>
+
+      {/* Ring */}
+      <div style={{ marginTop:20, display:"flex", justifyContent:"center" }}>
+        <div style={{ position:"relative", width:260, height:260 }}>
+          <RingStack progress={progress} targets={targets} size={260} strokeWidth={9} gap={3}/>
+          <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", textAlign:"center" }}>
+            <div style={{ fontFamily:"var(--font-mono)", fontSize:9.5, letterSpacing:0.2, textTransform:"uppercase", color:"var(--ink-60)" }}>Week Volume</div>
+            <div style={{ fontFamily:"var(--font-display)", fontSize:68, lineHeight:0.85, letterSpacing:-0.05, marginTop:8, fontVariantNumeric:"tabular-nums", fontWeight:400 }}>{totalDone}</div>
+            <div style={{ fontFamily:"var(--font-mono)", fontSize:10, letterSpacing:0.12, color:"var(--ink-60)", marginTop:2 }}>of {totalTarget}</div>
+          </div>
+        </div>
+      </div>
+      <div style={{ marginTop:20 }}><GroupKey progress={progress} targets={targets}/></div>
+
+      {/* Day cards — custom or regular */}
+      {isCustom ? (
+        <>
+          <Rule label="My Custom Split"/>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
+            {customPlan.days.map((plan, i) => {
+              const d = i+1;
+              const dayExtra = splitCompletions.filter(c=>c.day===d&&c.slot>=1000).length;
+              const isDone = splitCompletedDays.includes(d);
+              return (
+                <div key={d} style={{ position:"relative" }}>
+                  <DayCard day={d} plan={{...plan,main:plan.main||[],other:plan.other||[]}} dayColor={DAY_COLORS[i%DAY_COLORS.length]}
+                    completed={dayExtra} total={Math.max(dayExtra,1)} isCurrent={d===currentDay&&!isDone} isDone={isDone}
+                    onClick={() => navigate({ screen:"day", dayId:d })}/>
+                  <button onClick={() => { if(window.confirm(`Remove ${plan.title}?`)) dispatch({ type:"REMOVE_CUSTOM_DAY", index:i }); }}
+                    style={{ position:"absolute", top:4, right:4, width:20, height:20, background:"var(--ink)", color:"var(--paper)", border:"none", cursor:"pointer", fontFamily:"var(--font-mono)", fontSize:11, display:"flex", alignItems:"center", justifyContent:"center", zIndex:1 }}>×</button>
+                </div>
+              );
+            })}
+          </div>
+          <button onClick={() => { const t=window.prompt("Day name:", `Day ${customPlan.days.length+1}`)||`Day ${customPlan.days.length+1}`; dispatch({ type:"ADD_CUSTOM_DAY", title:t }); }}
+            style={{ width:"100%", marginTop:10, fontFamily:"var(--font-mono)", fontSize:11, letterSpacing:0.14, textTransform:"uppercase", padding:"14px", background:"transparent", color:"var(--ink)", border:"1px dashed var(--ink)", cursor:"pointer", borderRadius:0 }}>
+            + Add Day
+          </button>
+        </>
+      ) : (
+        <>
+          <Rule label={`${splitData.label} · ${splitCompletedDays.length < totalDays ? "Day "+currentDay+" on deck" : "Week Complete"}`}/>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
+            {splitData.days.map((plan, i) => {
+              const d = i+1;
+              const dayComp = splitCompletions.filter(c=>c.day===d&&c.slot<1000).length;
+              const dayExtra = splitCompletions.filter(c=>c.day===d&&c.slot>=1000).length;
+              const total = plan.main.length + plan.other.length + dayExtra;
+              const isDone = splitCompletedDays.includes(d);
+              return <DayCard key={d} day={d} plan={plan} dayColor={DAY_COLORS[i%DAY_COLORS.length]}
+                completed={dayComp+dayExtra} total={total} isCurrent={d===currentDay&&!isDone} isDone={isDone}
+                onClick={() => navigate({ screen:"day", dayId:d })}/>;
+            })}
+            {hasExtraDay && (() => {
+              const d = splitData.days.length + 1;
+              const isDone = splitCompletedDays.includes(d);
+              const dayExtra = splitCompletions.filter(c=>c.day===d&&c.slot>=1000).length;
+              return (
+                <DayCard key="extra" day={d} plan={{ title: extraDays[activeSplit]?.title||"Extra Day", sub:"Optional · your exercises", main:[], other:[] }}
+                  dayColor="oklch(0.62 0.06 250)" completed={dayExtra} total={Math.max(dayExtra,1)}
+                  isCurrent={d===currentDay&&!isDone} isDone={isDone}
+                  onClick={() => navigate({ screen:"day", dayId:d })}
+                  onRemove={() => dispatch({ type:"REMOVE_EXTRA_DAY", split:activeSplit })}/>
+              );
+            })()}
+          </div>
+          {!hasExtraDay && (
+            <button onClick={() => { const t=window.prompt("Day name:","Extra Day")||"Extra Day"; dispatch({ type:"ADD_EXTRA_DAY", split:activeSplit, title:t }); }}
+              style={{ width:"100%", marginTop:8, fontFamily:"var(--font-mono)", fontSize:10, letterSpacing:0.14, textTransform:"uppercase", padding:"12px", background:"transparent", color:"var(--ink-60)", border:"1px dashed var(--rule)", cursor:"pointer" }}>
+              + Add Optional Day
+            </button>
+          )}
+        </>
+      )}
+
+      {/* Volume bars */}
+      <Rule label="Volume By Group"/>
+      <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
+        {MUSCLE_GROUPS.map(g => {
+          const target = targets[g]||0, done = progress[g]||0, pct = target ? done/target : 0;
+          return (
+            <div key={g}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline" }}>
+                <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                  <span style={{ width:8, height:8, borderRadius:999, background:MG_COLORS[g] }}/>
+                  <span style={{ fontFamily:"var(--font-display)", fontSize:16, letterSpacing:-0.1 }}>{MG_LABEL[g]}</span>
+                </div>
+                <div style={{ fontFamily:"var(--font-mono)", fontSize:11, letterSpacing:0.08, color:"var(--ink-60)", fontVariantNumeric:"tabular-nums" }}>
+                  {done}/{target}<span style={{ marginLeft:8, color:pct>=1?"var(--success)":"var(--accent)" }}>{pct>=1?"DONE":"LAGGING"}</span>
+                </div>
+              </div>
+              <div style={{ height:5, background:"var(--rule)", marginTop:5, position:"relative" }}>
+                <div style={{ position:"absolute", inset:0, width:`${Math.min(1,pct)*100}%`, background:MG_COLORS[g], transition:"width 500ms ease" }}/>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ marginTop:28, paddingTop:14, borderTop:"1px solid var(--ink)", display:"flex", justifyContent:"flex-end" }}>
+        <span onClick={() => { if(window.confirm('Reset this week? All progress will be permanently deleted.')) dispatch({ type:"RESET_SPLIT" }); }} style={{ fontFamily:"var(--font-mono)", fontSize:9.5, letterSpacing:0.18, textTransform:"uppercase", color:"var(--ink-60)", cursor:"pointer", borderBottom:"1px solid var(--ink-60)" }}>Reset Week</span>
+      </div>
+    </div>
+  );
+}
+
+// ── Day Screen ──
+function DayScreen({ state, dispatch, navigate, dayId, isPro=false, setShowPaywall }) {
+  const { activeSplit, completions, completedDays, setsLog, hiddenSlots, customPlan, detailedMode, extraPlan: stateExtraPlan, detailedSets: stateDetailedSets } = state;
+  const isCustom = activeSplit === 'custom';
+  const splitData = isCustom ? customPlan : SPLITS[activeSplit];
+  const isExtraDay = !isCustom && dayId > splitData.days.length;
+  const plan = isExtraDay
+    ? { title:(state.extraDays?.[activeSplit]?.title||"Extra Day"), sub:"Optional · add from catalog", main:[], other:[] }
+    : (splitData.days[dayId-1] || { title:`Day ${dayId}`, sub:"", main:[], other:[] });
+  const splitCompletions = completions[activeSplit] || [];
+  const splitCompletedDays = completedDays[activeSplit] || [];
+  const splitSets = (setsLog||{})[activeSplit] || {};
+  const dayHidden = ((hiddenSlots||{})[activeSplit]||{})[dayId] || [];
+  const [searchQ, setSearchQ] = useState("");
+
+  const mainIds = plan.main || [], otherIds = plan.other || [];
+  const allPlanIds = [...mainIds, ...otherIds];
+  const plannedDone = new Set(splitCompletions.filter(c=>c.day===dayId&&c.slot<1000).map(c=>c.slot));
+  const dayExtraPlan = ((stateExtraPlan||{})[activeSplit]||{})[dayId] || [];
+  const extraCheckedSlots = new Set(splitCompletions.filter(c=>c.day===dayId&&c.slot>=1000).map(c=>c.slot));
+  const extras = dayExtraPlan.map(e => ({...e, checked: extraCheckedSlots.has(e.slot)}));
+  const extraIds = new Set(dayExtraPlan.map(e => e.id));
+
+  const visibleMainCount = mainIds.filter((_,i)=>!dayHidden.includes(i)).length;
+  const visibleOtherCount = otherIds.filter((_,i)=>!dayHidden.includes(mainIds.length+i)).length;
+  const totalCount = visibleMainCount + visibleOtherCount + dayExtraPlan.length;
+  const doneCount = [...plannedDone].filter(s=>!dayHidden.includes(s)).length + extras.filter(e=>e.checked).length;
+  const pct = totalCount ? doneCount/totalCount : 0;
+  const isDone = splitCompletedDays.includes(dayId);
+
+  // Week progress for lagging calc
+  const weekProg = {}; MUSCLE_GROUPS.forEach(g=>weekProg[g]=0);
+  splitCompletions.forEach(c=>{ const ex=exerciseById(c.id); if(ex.group) weekProg[ex.group]++; });
+  const weekTargets = getWeeklyTargets(activeSplit, customPlan?.days||[]);
+  const todayGroupsCovered = new Set(allPlanIds.map(id=>exerciseById(id).group));
+
+  const laggingGroups = (() => {
+    const lagging = new Set();
+    // Check every day before current (not just "done" days) for skipped exercises
+    for (let prevDay = 1; prevDay < dayId; prevDay++) {
+      const prevPlan = isCustom ? (customPlan.days[prevDay-1]||{}) : (SPLITS[activeSplit]?.days[prevDay-1]||{});
+      const prevMainIds = prevPlan.main||[], prevOtherIds = prevPlan.other||[];
+      const prevAllIds = [...prevMainIds, ...prevOtherIds];
+      if (prevAllIds.length === 0) continue;
+      const prevHidden = ((hiddenSlots||{})[activeSplit]||{})[prevDay] || [];
+      const prevExtras = ((state.extraPlan||{})[activeSplit]||{})[prevDay] || [];
+      [...prevAllIds.map((id,slot) => ({id, slot})), ...prevExtras.map(e => ({id:e.id, slot:e.slot}))].forEach(({id, slot}) => {
+        if (prevAllIds[slot] !== undefined && prevHidden.includes(slot)) return;
+        const wasDone = splitCompletions.some(c => c.day===prevDay && c.slot===slot);
+        if (!wasDone) {
+          const ex = exerciseById(id);
+          if (ex.group && !todayGroupsCovered.has(ex.group)) lagging.add(ex.group);
+        }
+      });
+    }
+    return MUSCLE_GROUPS.filter(g => lagging.has(g));
+  })();
+  const laggingRecs = {};
+  laggingGroups.forEach(g => {
+    laggingRecs[g] = Object.values(EXERCISES).filter(ex=>ex.group===g&&!allPlanIds.includes(ex.id)).slice(0,5);
+  });
+
+  // Catalog — hidden (removed) exercises are excluded so they re-appear here
+  const visiblePlanIds = [
+    ...mainIds.filter((_,i) => !dayHidden.includes(i)),
+    ...otherIds.filter((_,i) => !dayHidden.includes(mainIds.length + i)),
+  ];
+  const inPlanSet = new Set([...visiblePlanIds, ...dayExtraPlan.map(e=>e.id)]);
+  const q = searchQ.trim().toLowerCase();
+  const catalogByGroup = {};
+  MUSCLE_GROUPS.forEach(g => catalogByGroup[g]=[]);
+  Object.values(EXERCISES).forEach(ex => { if(!inPlanSet.has(ex.id)) catalogByGroup[ex.group].push(ex); });
+  const filteredCatalog = {};
+  MUSCLE_GROUPS.forEach(g => { filteredCatalog[g] = q ? catalogByGroup[g].filter(ex=>ex.name.toLowerCase().includes(q)) : catalogByGroup[g]; });
+  const catalogHasResults = MUSCLE_GROUPS.some(g=>filteredCatalog[g].length>0);
+
+  const getSets = (slot, tgt) => ({ done: splitSets[`${dayId}_${slot}`]||0, target:tgt });
+  const splitDetailedSets = (stateDetailedSets||{})[activeSplit] || {};
+  const getDetailedEntries = slot => splitDetailedSets[`${dayId}_${slot}`] || [];
+  const mkAddSetEntry    = slot => e => dispatch({ type:"ADD_SET_ENTRY",    split:activeSplit, day:dayId, slot, reps:e.reps, kg:e.kg });
+  const mkEditSetEntry   = slot => (index, e) => dispatch({ type:"EDIT_SET_ENTRY",   split:activeSplit, day:dayId, slot, index, reps:e.reps, kg:e.kg });
+  const mkDeleteSetEntry = slot => index => dispatch({ type:"DELETE_SET_ENTRY", split:activeSplit, day:dayId, slot, index });
+
+  return (
+    <div style={{ padding:"8px 24px 120px", fontFamily:"var(--font-body)", color:"var(--ink)" }}>
+      {/* Header */}
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", paddingTop:4 }}>
+        <button onClick={() => navigate({ screen:"home" })} style={{ background:"var(--paper)", cursor:"pointer", border:"1px solid var(--ink)", fontFamily:"var(--font-mono)", fontSize:10.5, letterSpacing:0.16, textTransform:"uppercase", color:"var(--ink)", padding:"10px 14px", minHeight:44, display:"flex", alignItems:"center" }}>← Back</button>
+        <div style={{ display:"flex", gap:4, fontFamily:"var(--font-mono)", fontSize:10.5, letterSpacing:0.14, textTransform:"uppercase", color:"var(--ink-60)" }}>
+          {dayId>1 && <button onClick={()=>navigate({screen:"day",dayId:dayId-1})} style={{ background:"transparent", border:"none", cursor:"pointer", fontFamily:"var(--font-mono)", fontSize:10.5, letterSpacing:0.14, textTransform:"uppercase", color:"var(--ink-60)", padding:"10px 8px", minHeight:44, display:"flex", alignItems:"center" }}>‹ Prev</button>}
+          {dayId<splitData.days.length+(state.extraDays?.[activeSplit]?.enabled?1:0) && <button onClick={()=>navigate({screen:"day",dayId:dayId+1})} style={{ background:"transparent", border:"none", cursor:"pointer", fontFamily:"var(--font-mono)", fontSize:10.5, letterSpacing:0.14, textTransform:"uppercase", color:"var(--ink-60)", padding:"10px 8px", minHeight:44, display:"flex", alignItems:"center" }}>Next ›</button>}
+        </div>
+      </div>
+
+      {/* Folio */}
+      <div style={{ marginTop:16, display:"flex", alignItems:"flex-end", gap:14 }}>
+        <div style={{ fontFamily:"var(--font-display)", fontSize:130, lineHeight:0.82, letterSpacing:-0.06, fontVariantNumeric:"tabular-nums", fontWeight:400, fontStyle:"italic", color:DAY_COLORS[(dayId-1)%DAY_COLORS.length] }}>{dayId}</div>
+        <div style={{ paddingBottom:10, flex:1 }}>
+          <div style={{ fontFamily:"var(--font-mono)", fontSize:10, letterSpacing:0.18, textTransform:"uppercase", color:"var(--ink-60)" }}>{SPLITS[activeSplit]?.label||"Custom"}</div>
+          <div style={{ fontFamily:"var(--font-display)", fontSize:22, letterSpacing:-0.15, marginTop:4, lineHeight:1.1 }}>{plan.title}</div>
+          <div style={{ fontFamily:"var(--font-body)", fontSize:12.5, color:"var(--ink-60)", marginTop:3, fontStyle:"italic" }}>{plan.sub}</div>
+        </div>
+      </div>
+
+      {/* Progress */}
+      <div style={{ marginTop:14, display:"flex", alignItems:"center", gap:12 }}>
+        <div style={{ flex:1, height:2, background:"var(--rule)", position:"relative" }}>
+          <div style={{ position:"absolute", inset:0, width:`${pct*100}%`, background:"var(--ink)", transition:"width 400ms ease" }}/>
+        </div>
+        <div style={{ fontFamily:"var(--font-mono)", fontSize:11, letterSpacing:0.1, fontVariantNumeric:"tabular-nums" }}>{doneCount}/{totalCount}</div>
+      </div>
+
+      {/* Main */}
+      {mainIds.length > 0 && <Rule label="Main"/>}
+      {mainIds.map((id, i) => {
+        if (dayHidden.includes(i)) return null;
+        const ex = exerciseById(id);
+        const s = getSets(i, SETS_MAIN);
+        return <ExerciseRow key={`m-${i}`} ex={ex} isMain checked={plannedDone.has(i)}
+          onToggle={() => dispatch({ type:plannedDone.has(i)?"UNCHECK":"CHECK", split:activeSplit, day:dayId, slot:i, id })}
+          setsDone={s.done} setsTarget={s.target}
+          detailedMode={detailedMode} detailedEntries={getDetailedEntries(i)} onAddSetEntry={mkAddSetEntry(i)} onEditSetEntry={mkEditSetEntry(i)} onDeleteSetEntry={mkDeleteSetEntry(i)}
+          onRemove={() => dispatch({ type:"HIDE_SLOT", split:activeSplit, day:dayId, slot:i })}/>;
+      })}
+
+      {/* Secondary */}
+      {(otherIds.length > 0 || extras.length > 0) && <Rule label="Secondary"/>}
+      {otherIds.map((id, i) => {
+        const slot = mainIds.length + i;
+        if (dayHidden.includes(slot)) return null;
+        const ex = exerciseById(id);
+        const s = getSets(slot, SETS_ACC);
+        return <ExerciseRow key={`o-${i}`} ex={ex} checked={plannedDone.has(slot)}
+          onToggle={() => dispatch({ type:plannedDone.has(slot)?"UNCHECK":"CHECK", split:activeSplit, day:dayId, slot, id })}
+          setsDone={s.done} setsTarget={s.target}
+          detailedMode={detailedMode} detailedEntries={getDetailedEntries(slot)} onAddSetEntry={mkAddSetEntry(slot)} onEditSetEntry={mkEditSetEntry(slot)} onDeleteSetEntry={mkDeleteSetEntry(slot)}
+          onRemove={() => dispatch({ type:"HIDE_SLOT", split:activeSplit, day:dayId, slot })}/>;
+      })}
+      {extras.map(e => {
+        const s = getSets(e.slot, SETS_ACC);
+        return <ExerciseRow key={`e-${e.slot}`} ex={exerciseById(e.id)} checked={e.checked} dashed
+          onToggle={() => dispatch({ type:e.checked?"UNCHECK":"CHECK", split:activeSplit, day:dayId, slot:e.slot, id:e.id })}
+          setsDone={s.done} setsTarget={s.target}
+          detailedMode={detailedMode} detailedEntries={getDetailedEntries(e.slot)} onAddSetEntry={mkAddSetEntry(e.slot)} onEditSetEntry={mkEditSetEntry(e.slot)} onDeleteSetEntry={mkDeleteSetEntry(e.slot)}
+          onRemove={() => dispatch({ type:"REMOVE_EXTRA", split:activeSplit, day:dayId, slot:e.slot })}/>;
+      })}
+      {(mainIds.length > 0 || otherIds.length > 0 || extras.length > 0) && <div style={{ borderTop:"1px solid var(--ink)" }}/>}
+
+      {/* Lagging muscles — Pro only, shows after day 1 complete */}
+      {isPro && laggingGroups.length > 0 && splitCompletedDays.length >= 1 && (
+        <>
+          <Rule label="Fill the Gap · Lagging This Week"/>
+          <div style={{ fontFamily:"var(--font-body)", fontSize:12.5, color:"var(--ink-60)", fontStyle:"italic", marginBottom:14, marginTop:-6 }}>
+            These muscle groups are behind schedule — tap to add to today.
+          </div>
+          {laggingGroups.map(g => {
+            const done = weekProg[g]||0;
+            const target = weekTargets[g]||0;
+            const pct = target ? done/target : 0;
+            const barColor = pct === 0 ? "#e04444" : pct < 0.4 ? "#d97706" : "var(--accent)";
+            return (
+              <div key={g} style={{ marginBottom:14, border:"1px solid var(--rule)", borderLeft:`3px solid ${MG_COLORS[g]}`, padding:"10px 12px" }}>
+                <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:6 }}>
+                  <span style={{ fontFamily:"var(--font-mono)", fontSize:10, letterSpacing:0.16, textTransform:"uppercase", color:MG_COLORS[g] }}>{MG_LABEL[g]}</span>
+                  <span style={{ fontFamily:"var(--font-mono)", fontSize:10, color:"var(--ink-60)", marginLeft:"auto" }}>{done} / {target} sets</span>
+                </div>
+                <div style={{ height:3, background:"var(--rule)", marginBottom:10, overflow:"hidden" }}>
+                  <div style={{ height:"100%", width:`${Math.max(pct*100,0)}%`, background:barColor, transition:"width 400ms ease" }}/>
+                </div>
+                <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
+                  {laggingRecs[g].map(ex => {
+                    const on = extraIds.has(ex.id);
+                    return (
+                      <button key={ex.id}
+                        onClick={() => dispatch({ type:on?"REMOVE_EXTRA_BY_ID":"ADD_EXTRA", split:activeSplit, day:dayId, id:ex.id })}
+                        style={{ fontFamily:"var(--font-body)", fontSize:12.5, padding:"5px 11px", background:on?MG_COLORS[g]:"transparent", color:on?"#fff":"var(--ink)", border:`1px solid ${on?MG_COLORS[g]:"var(--ink)"}`, borderRadius:0, cursor:"pointer", transition:"background 180ms, color 180ms" }}>
+                        {on ? "✓ "+ex.name : "+ "+ex.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </>
+      )}
+
+      {/* Catalog with search */}
+      <Rule label="Catalog · Tap to Add"/>
+      <input type="text" placeholder="Search exercises…" value={searchQ} onChange={e=>setSearchQ(e.target.value)}
+        style={{ width:"100%", fontFamily:"var(--font-mono)", fontSize:12, padding:"9px 12px", border:"1px solid var(--ink-30)", background:"transparent", color:"var(--ink)", outline:"none", boxSizing:"border-box", letterSpacing:0.08, marginBottom:14 }}/>
+      <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+        {catalogHasResults ? MUSCLE_GROUPS.map(g => {
+          const list = filteredCatalog[g]; if(!list.length) return null;
+          return (
+            <div key={g}>
+              <div style={{ fontFamily:"var(--font-mono)", fontSize:10, letterSpacing:0.16, textTransform:"uppercase", display:"flex", alignItems:"center", gap:6, color:"var(--ink)", marginBottom:5 }}>
+                <span style={{ width:6,height:6,borderRadius:999,background:MG_COLORS[g] }}/>{MG_LABEL[g]}
+              </div>
+              <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
+                {list.map(ex => {
+                  const on = extraIds.has(ex.id);
+                  return <button key={ex.id} onClick={() => dispatch({ type:on?"REMOVE_EXTRA_BY_ID":"ADD_EXTRA", split:activeSplit, day:dayId, id:ex.id })}
+                    style={{ fontFamily:"var(--font-body)", fontSize:12.5, padding:"5px 10px", background:on?"var(--ink)":"transparent", color:on?"var(--paper)":"var(--ink)", border:"1px solid var(--ink)", borderRadius:0, cursor:"pointer" }}>
+                    {on?"✓ ":"+ "}{ex.name}
+                  </button>;
+                })}
+              </div>
+            </div>
+          );
+        }) : <div style={{ fontFamily:"var(--font-mono)", fontSize:11, color:"var(--ink-60)", padding:"16px 0" }}>No results for "{searchQ}"</div>}
+      </div>
+
+      {/* Complete / Reset */}
+      {(() => {
+        const totalSplitDays = splitData.days.length + (state.extraDays?.[activeSplit]?.enabled ? 1 : 0);
+        const isLastDay = dayId >= totalSplitDays;
+        const btnBase = { flex:1, fontFamily:"var(--font-mono)", letterSpacing:0.16, textTransform:"uppercase", padding:"16px", borderRadius:0, cursor:"pointer" };
+        return (
+          <div style={{ marginTop:32, display:"flex", flexDirection:"column", gap:8 }}>
+            {isLastDay ? (
+              <button onClick={() => { dispatch({ type:"COMPLETE_WEEK", split:activeSplit }); navigate({ screen:"analytics" }); }}
+                style={{ ...btnBase, fontSize:12, background:"var(--accent)", color:"#fff", border:"none" }}>
+                ✓ Complete Week — Save to Analytics
+              </button>
+            ) : (
+              isDone
+                ? <div style={{ ...btnBase, fontSize:11, background:"var(--accent)", color:"#fff", textAlign:"center", display:"flex", alignItems:"center", justifyContent:"center" }}>Day {dayId} Done</div>
+                : <button onClick={() => { dispatch({ type:"COMPLETE_DAY", split:activeSplit, day:dayId }); navigate({ screen:"day", dayId:dayId+1 }); }}
+                    style={{ ...btnBase, fontSize:11.5, background:"var(--ink)", color:"var(--paper)", border:"1px solid var(--ink)" }}>✓ Complete Day {dayId}</button>
+            )}
+            <button onClick={() => dispatch({ type:"RESET_DAY", split:activeSplit, day:dayId })}
+              style={{ fontFamily:"var(--font-mono)", fontSize:11, letterSpacing:0.12, textTransform:"uppercase", padding:"12px 14px", background:"transparent", color:"var(--ink-60)", border:"1px solid var(--rule)", borderRadius:0, cursor:"pointer" }}>Reset Day</button>
+          </div>
+        );
+      })()}
+    </div>
+  );
+}
+
+function PaywallModal({ onClose }) {
+  const { useState: useStatePaywall } = React;
+  const [pick, setPick] = useStatePaywall('yearly');
+  return (
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:300, display:"flex", alignItems:"flex-end", justifyContent:"center" }} onClick={onClose}>
+      <div onClick={e=>e.stopPropagation()} style={{ background:"var(--paper)", width:"100%", maxWidth:440, padding:"30px 26px 44px", boxSizing:"border-box", borderRadius:"20px 20px 0 0", color:"var(--ink)", fontFamily:"var(--font-body)" }}>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
+          <div>
+            <div style={{ fontFamily:"var(--font-display)", fontSize:28, letterSpacing:-0.2, lineHeight:1 }}><span style={{ fontStyle:"italic" }}>Training</span> Pro</div>
+            <div style={{ fontFamily:"var(--font-mono)", fontSize:9.5, letterSpacing:0.14, textTransform:"uppercase", color:"var(--ink-60)", marginTop:5 }}>Unlock the full experience</div>
+          </div>
+          <button onClick={onClose} style={{ background:"transparent", border:"1px solid var(--rule)", fontFamily:"var(--font-mono)", fontSize:14, color:"var(--ink-60)", cursor:"pointer", width:30, height:30, display:"flex", alignItems:"center", justifyContent:"center" }}>×</button>
+        </div>
+        <div style={{ height:1, background:"var(--rule)", margin:"16px 0" }}/>
+        {[
+          { label:"Muscle Map & Analytics", sub:"Heat map, volume trends, personal records" },
+          { label:"Smart Fill the Gap", sub:"AI spots lagging muscles and fills your day" },
+          { label:"Full History", sub:"Week-by-week logs and progress over time" },
+        ].map((f,i) => (
+          <div key={i} style={{ display:"flex", gap:12, marginBottom:12, alignItems:"flex-start" }}>
+            <div style={{ width:6, height:6, borderRadius:999, background:"var(--accent)", flexShrink:0, marginTop:6 }}/>
+            <div>
+              <div style={{ fontFamily:"var(--font-display)", fontSize:15, letterSpacing:-0.1 }}>{f.label}</div>
+              <div style={{ fontFamily:"var(--font-body)", fontSize:11.5, color:"var(--ink-60)", marginTop:1, fontStyle:"italic" }}>{f.sub}</div>
+            </div>
+          </div>
+        ))}
+        <div style={{ height:1, background:"var(--rule)", margin:"16px 0" }}/>
+        {/* Plan selector */}
+        <div style={{ display:"flex", gap:8, marginBottom:16 }}>
+          {[
+            { id:"monthly", label:"Monthly", price:"$1.99", period:"AUD / mo", badge:null },
+            { id:"yearly",  label:"Yearly",  price:"$9.99", period:"AUD / yr", badge:"Save 58%" },
+          ].map(p => (
+            <button key={p.id} onClick={()=>setPick(p.id)} style={{
+              flex:1, padding:"14px 10px", border:`2px solid ${pick===p.id?"var(--ink)":"var(--rule)"}`,
+              background: pick===p.id ? "var(--ink)" : "transparent",
+              color: pick===p.id ? "var(--paper)" : "var(--ink)",
+              cursor:"pointer", textAlign:"center", position:"relative", transition:"all 140ms"
+            }}>
+              {p.badge && <span style={{ position:"absolute", top:-9, left:"50%", transform:"translateX(-50%)", background:"var(--accent)", color:"#fff", fontFamily:"var(--font-mono)", fontSize:7, letterSpacing:0.14, textTransform:"uppercase", padding:"2px 7px", whiteSpace:"nowrap" }}>{p.badge}</span>}
+              <div style={{ fontFamily:"var(--font-mono)", fontSize:9, letterSpacing:0.14, textTransform:"uppercase", opacity:0.7, marginBottom:4 }}>{p.label}</div>
+              <div style={{ fontFamily:"var(--font-display)", fontSize:22, letterSpacing:-0.05, lineHeight:1 }}>{p.price}</div>
+              <div style={{ fontFamily:"var(--font-mono)", fontSize:8.5, opacity:0.6, marginTop:3 }}>{p.period}</div>
+            </button>
+          ))}
+        </div>
+        <button onClick={()=>{ window.open(pick==='monthly'?STRIPE_MONTHLY:STRIPE_YEARLY,"_blank"); onClose(); }}
+          style={{ width:"100%", fontFamily:"var(--font-mono)", fontSize:12, letterSpacing:0.18, textTransform:"uppercase", padding:"17px", background:"var(--ink)", color:"var(--paper)", border:"none", cursor:"pointer" }}>
+          Start Pro — {pick==='monthly' ? '$1.99 / month' : '$9.99 / year'} →
+        </button>
+        <div style={{ fontFamily:"var(--font-mono)", fontSize:9, textAlign:"center", color:"var(--ink-60)", marginTop:10, letterSpacing:0.1 }}>
+          Cancel anytime · Secure payment via Stripe
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function WorkoutCalendar({ weekHistory }) {
+  const now = new Date();
+  const year = now.getFullYear(), month = now.getMonth();
+  const firstDow = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const [selected, setSelected] = React.useState(null);
+
+  // Map each calendar date to its week entry
+  const dayToEntry = {};
+  weekHistory.forEach(w => {
+    const d = new Date(w.completedAt);
+    if (d.getFullYear()===year && d.getMonth()===month) dayToEntry[d.getDate()] = w;
+  });
+
+  const cells = [];
+  for (let i=0; i<firstDow; i++) cells.push(null);
+  for (let d=1; d<=daysInMonth; d++) cells.push(d);
+  const monthLabel = now.toLocaleDateString("en-AU", { month:"long", year:"numeric" });
+
+  const entry = selected ? dayToEntry[selected] : null;
+
+  return (
+    <div>
+      <div style={{ fontFamily:"var(--font-mono)", fontSize:9.5, letterSpacing:0.14, textTransform:"uppercase", color:"var(--ink-60)", marginBottom:10, textAlign:"center" }}>{monthLabel}</div>
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(7,1fr)", gap:2, marginBottom:4 }}>
+        {["Su","Mo","Tu","We","Th","Fr","Sa"].map(d=>(
+          <div key={d} style={{ textAlign:"center", fontFamily:"var(--font-mono)", fontSize:7.5, letterSpacing:0.1, textTransform:"uppercase", color:"var(--ink-60)", padding:"3px 0" }}>{d}</div>
+        ))}
+      </div>
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(7,1fr)", gap:2 }}>
+        {cells.map((d,i) => {
+          if (!d) return <div key={`e${i}`}/>;
+          const isToday = d===now.getDate();
+          const hasWorkout = !!dayToEntry[d];
+          const isSelected = selected===d;
+          return (
+            <div key={d} onClick={() => hasWorkout && setSelected(isSelected ? null : d)}
+              style={{
+                aspectRatio:"1", display:"flex", alignItems:"center", justifyContent:"center",
+                background: isToday ? "var(--ink)" : isSelected ? "#f97316" : hasWorkout ? "rgba(249,115,22,0.15)" : "transparent",
+                border: `1px solid ${isToday ? "var(--ink)" : isSelected ? "#f97316" : hasWorkout ? "#f97316" : "var(--rule)"}`,
+                borderRadius:3, cursor: hasWorkout ? "pointer" : "default",
+              }}>
+              <span style={{ fontFamily:"var(--font-mono)", fontSize:10, fontVariantNumeric:"tabular-nums",
+                color: isToday ? "var(--paper)" : isSelected ? "#fff" : hasWorkout ? "#f97316" : "var(--ink-60)" }}>{d}</span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Workout detail panel */}
+      {entry && (
+        <div style={{ marginTop:14, border:"1px solid #f97316", padding:"14px 16px", borderRadius:2 }}>
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
+            <div>
+              <div style={{ fontFamily:"var(--font-mono)", fontSize:8.5, letterSpacing:0.16, textTransform:"uppercase", color:"#f97316" }}>
+                {new Date(entry.completedAt).toLocaleDateString("en-AU",{weekday:"short",day:"numeric",month:"short"})}
+              </div>
+              <div style={{ fontFamily:"var(--font-display)", fontSize:17, fontStyle:"italic", marginTop:2 }}>
+                {(typeof SPLITS !== 'undefined' && SPLITS[entry.split]?.label) || entry.split}
+              </div>
+            </div>
+            <button onClick={() => setSelected(null)} style={{ background:"transparent", border:"none", color:"var(--ink-60)", fontSize:18, cursor:"pointer", lineHeight:1, padding:"0 4px" }}>×</button>
+          </div>
+          {(() => {
+            // Group completions by day number
+            const byDay = {};
+            (entry.completions||[]).forEach(c => {
+              if (!byDay[c.day]) byDay[c.day] = [];
+              const ex = exerciseById(c.id);
+              const dsKey = `${c.day}_${c.slot}`;
+              const sets = (entry.detailedSets||{})[dsKey] || [];
+              byDay[c.day].push({ ex, sets });
+            });
+            return Object.entries(byDay).sort((a,b)=>+a[0]-+b[0]).map(([day, exList]) => (
+              <div key={day} style={{ marginBottom:10 }}>
+                <div style={{ fontFamily:"var(--font-mono)", fontSize:7.5, letterSpacing:0.14, textTransform:"uppercase", color:"var(--ink-60)", marginBottom:5, borderBottom:"1px solid var(--rule)", paddingBottom:4 }}>Day {day}</div>
+                {exList.map(({ ex, sets }, idx) => (
+                  <div key={idx} style={{ display:"flex", alignItems:"baseline", justifyContent:"space-between", padding:"4px 0", borderBottom:"1px solid var(--rule)" }}>
+                    <div style={{ fontFamily:"var(--font-body)", fontSize:13 }}>{ex.name}</div>
+                    <div style={{ fontFamily:"var(--font-mono)", fontSize:9.5, color:"var(--ink-60)", flexShrink:0, marginLeft:8 }}>
+                      {sets.length > 0
+                        ? sets.map((s,i) => `${s.reps}×${s.kg}kg`).join(" · ")
+                        : `${sets.length || "–"} sets`}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ));
+          })()}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AnalyticsScreen({ state, navigate, setShowPaywall }) {
+  const { weekHistory=[], activeSplit, completions, detailedSets: stateDS={} } = state;
+  const [period, setPeriod] = useState('week');
+  const now = Date.now(), DAY = 86400000;
+  const cutoff = period==='week' ? now-7*DAY : period==='month' ? now-30*DAY : 0;
+  const filteredHistory = weekHistory.filter(w => w.completedAt >= cutoff);
+  const currentComp = period==='week' ? (completions[activeSplit]||[]) : [];
+  const allComp = [...filteredHistory.flatMap(w=>w.completions), ...currentComp];
+
+  // Live (current in-progress week) data
+  const liveDS = stateDS[activeSplit] || {};
+  const liveComp = completions[activeSplit] || [];
+  const liveVolume = Object.values(liveDS).reduce((s, entries) =>
+    s + entries.reduce((es, e) => es + (e.reps||0)*(e.kg||0), 0), 0);
+  const liveSets = Object.values(liveDS).reduce((s, entries) => s + entries.length, 0);
+
+  // Muscle heat map (includes live)
+  const muscleVol = {}; MUSCLE_GROUPS.forEach(g=>muscleVol[g]=0);
+  allComp.filter(c=>c.slot<1000).forEach(c=>{ const ex=exerciseById(c.id); if(ex.group) muscleVol[ex.group]++; });
+  const maxVol = Math.max(1,...Object.values(muscleVol));
+  const bodyIntensity = {}; MUSCLE_GROUPS.forEach(g=>bodyIntensity[g]=muscleVol[g]/maxVol);
+
+  // Exercise frequency
+  const exerciseFreq = {};
+  allComp.filter(c=>c.slot<1000).forEach(c=>{ exerciseFreq[c.id]=(exerciseFreq[c.id]||0)+1; });
+  const topEx = Object.entries(exerciseFreq).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const recentWeeks = [...weekHistory].reverse().slice(0,8);
+
+  // ── Hevy-style analytics (include live week) ──
+  const totalVolume = weekHistory.reduce((tot, w) =>
+    tot + Object.values(w.detailedSets||{}).reduce((s, entries) =>
+      s + entries.reduce((es, e) => es + (e.reps||0)*(e.kg||0), 0), 0), 0) + liveVolume;
+
+  const sortedW = [...weekHistory].sort((a,b) => b.completedAt - a.completedAt);
+  let streak = sortedW.length > 0 ? 1 : 0;
+  if (liveComp.length > 0 && sortedW.length === 0) streak = 1;
+  for (let i = 1; i < sortedW.length; i++) {
+    if (sortedW[i-1].completedAt - sortedW[i].completedAt <= 14*DAY) streak++;
+    else break;
+  }
+
+  const totalSets = weekHistory.reduce((tot, w) =>
+    tot + Object.values(w.detailedSets||{}).reduce((s, entries) => s + entries.length, 0), 0) + liveSets;
+
+  const histVols = [...weekHistory].sort((a,b) => a.completedAt-b.completedAt).slice(-7).map(w => ({
+    label: new Date(w.completedAt).toLocaleDateString("en-AU",{day:"numeric",month:"short"}),
+    v: Object.values(w.detailedSets||{}).reduce((s, entries) =>
+      s + entries.reduce((es, e) => es + (e.reps||0)*(e.kg||0), 0), 0)
+  }));
+  const weeklyVols = liveVolume > 0 ? [...histVols, { label:"Now", v:liveVolume }].slice(-8) : histVols.slice(-8);
+  const maxWV = Math.max(1, ...weeklyVols.map(w=>w.v));
+
+  // Personal records (completed weeks + live)
+  const prMap = {};
+  const addToMap = (ds, comp, date) => {
+    const slotMap = {};
+    (comp||[]).forEach(c => { slotMap[`${c.day}_${c.slot}`] = c.id; });
+    Object.entries(ds||{}).forEach(([key, entries]) => {
+      const exId = slotMap[key]; if (!exId) return;
+      entries.forEach(e => {
+        if ((e.kg||0) > 0 && (!prMap[exId] || e.kg > prMap[exId].kg))
+          prMap[exId] = { kg: e.kg, date };
+      });
+    });
+  };
+  weekHistory.forEach(w => addToMap(w.detailedSets, w.completions, new Date(w.completedAt)));
+  addToMap(liveDS, liveComp, new Date());
+  const topPRs = Object.entries(prMap).sort((a,b) => b[1].kg - a[1].kg).slice(0, 6);
+
+  const volDisplay = totalVolume >= 1000 ? `${(totalVolume/1000).toFixed(1)}k` : `${Math.round(totalVolume)}`;
+  const hasData = allComp.filter(c=>c.slot<1000).length > 0;
+
+  return (
+    <div style={{ padding:"8px 24px 120px", color:"var(--ink)" }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", paddingTop:8 }}>
+        <div>
+          <div style={{ fontFamily:"var(--font-mono)", fontSize:10, letterSpacing:0.18, textTransform:"uppercase", color:"var(--ink-60)" }}>Progress</div>
+          <div style={{ fontFamily:"var(--font-display)", fontSize:42, lineHeight:0.95, letterSpacing:-0.035, marginTop:10 }}><span style={{ fontStyle:"italic" }}>Analytics</span></div>
+        </div>
+      </div>
+      <div style={{ display:"flex", gap:4, marginTop:16 }}>
+        {[['week','This Week'],['month','Month'],['all','All Time']].map(([k,l])=>(
+          <button key={k} onClick={()=>setPeriod(k)} style={{ flex:1, fontFamily:"var(--font-mono)", fontSize:9.5, letterSpacing:0.1, textTransform:"uppercase", padding:"7px 4px", background:period===k?"var(--ink)":"transparent", color:period===k?"var(--paper)":"var(--ink)", border:"1px solid var(--ink)", cursor:"pointer" }}>{l}</button>
+        ))}
+      </div>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginTop:18 }}>
+        {[
+          { label:"Volume", v:volDisplay, unit:"kg" },
+          { label:"Streak", v:streak, unit:"wks" },
+          { label:"Workouts", v:weekHistory.length, unit:null },
+          { label:"Sets Logged", v:totalSets, unit:null }
+        ].map(s=>(
+          <div key={s.label} style={{ border:"1px solid var(--rule)", padding:"12px 14px" }}>
+            <div style={{ display:"flex", alignItems:"baseline", gap:4 }}>
+              <div style={{ fontFamily:"var(--font-display)", fontSize:28, letterSpacing:-0.04, lineHeight:1 }}>{s.v}</div>
+              {s.unit&&<div style={{ fontFamily:"var(--font-mono)", fontSize:9, letterSpacing:0.1, textTransform:"uppercase", color:"var(--ink-60)" }}>{s.unit}</div>}
+            </div>
+            <div style={{ fontFamily:"var(--font-mono)", fontSize:8.5, letterSpacing:0.14, textTransform:"uppercase", color:"var(--ink-60)", marginTop:5 }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+      <Rule label="Calendar"/>
+      <WorkoutCalendar weekHistory={weekHistory}/>
+      {/* ── Locked content — blur for non-subscribers ── */}
+      {(() => {
+        const isLocked = !(state.user && state.isPro);
+        const lockedContent = (
+          <>
+            <Rule label="Muscle Map"/>
+            {hasData ? <BodyMap intensities={bodyIntensity}/> : (
+              <div style={{ textAlign:"center", padding:"24px 0", fontFamily:"var(--font-mono)", fontSize:10, color:"var(--ink-60)", letterSpacing:0.12 }}>Train to see your muscle heat map</div>
+            )}
+            <Rule label="Weekly Volume"/>
+            {weeklyVols.length > 0 ? (
+              <div>
+                <div style={{ display:"flex", alignItems:"flex-end", gap:3, height:68 }}>
+                  {weeklyVols.map((wv,i) => {
+                    const pct = wv.v / maxWV;
+                    return (
+                      <div key={i} style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center" }}>
+                        <div style={{ width:"100%", background:"var(--ink)", opacity:0.35+pct*0.65, height:Math.max(4, Math.round(pct*56)), transition:"height 500ms ease", borderRadius:"2px 2px 0 0" }}/>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div style={{ display:"flex", gap:3, marginTop:5 }}>
+                  {weeklyVols.map((wv,i) => (
+                    <div key={i} style={{ flex:1, textAlign:"center", fontFamily:"var(--font-mono)", fontSize:7, color:"var(--ink-60)", letterSpacing:0.05 }}>{wv.label}</div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div style={{ textAlign:"center", padding:"14px 0", fontFamily:"var(--font-mono)", fontSize:10, color:"var(--ink-60)" }}>Log weight in sets to see trend</div>
+            )}
+            <Rule label="Personal Records"/>
+            {topPRs.length > 0 ? (
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
+                {topPRs.map(([id,pr]) => {
+                  const ex = exerciseById(id);
+                  return (
+                    <div key={id} style={{ border:"1px solid var(--rule)", padding:"10px 12px" }}>
+                      <div style={{ fontFamily:"var(--font-mono)", fontSize:7.5, letterSpacing:0.12, textTransform:"uppercase", color:MG_COLORS[ex.group||'abs'], marginBottom:4 }}>{MG_LABEL[ex.group||'abs']}</div>
+                      <div style={{ fontFamily:"var(--font-body)", fontSize:12, lineHeight:1.25 }}>{ex.name}</div>
+                      <div style={{ display:"flex", alignItems:"baseline", gap:3, marginTop:5 }}>
+                        <span style={{ fontFamily:"var(--font-display)", fontSize:24, letterSpacing:-0.03, lineHeight:1 }}>{pr.kg}</span>
+                        <span style={{ fontFamily:"var(--font-mono)", fontSize:9.5, color:"var(--ink-60)" }}>kg</span>
+                      </div>
+                      <div style={{ fontFamily:"var(--font-mono)", fontSize:7.5, color:"var(--ink-60)", marginTop:2, letterSpacing:0.1, textTransform:"uppercase" }}>
+                        {pr.date.toLocaleDateString("en-AU",{day:"numeric",month:"short",year:"2-digit"})}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div style={{ textAlign:"center", padding:"14px 0", fontFamily:"var(--font-mono)", fontSize:10, color:"var(--ink-60)" }}>Log weight in sets to unlock PRs</div>
+            )}
+            <Rule label="Volume by Group"/>
+            <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+              {MUSCLE_GROUPS.map(g=>(
+                <div key={g}>
+                  <div style={{ display:"flex", justifyContent:"space-between", marginBottom:3 }}>
+                    <div style={{ display:"flex", alignItems:"center", gap:7 }}><span style={{ width:6,height:6,borderRadius:999,background:MG_COLORS[g] }}/><span style={{ fontFamily:"var(--font-body)", fontSize:13 }}>{MG_LABEL[g]}</span></div>
+                    <span style={{ fontFamily:"var(--font-mono)", fontSize:10, color:"var(--ink-60)" }}>{muscleVol[g]} sets</span>
+                  </div>
+                  <div style={{ height:4, background:"var(--rule)" }}><div style={{ height:"100%", width:`${(muscleVol[g]/maxVol)*100}%`, background:MG_COLORS[g], transition:"width 500ms ease" }}/></div>
+                </div>
+              ))}
+            </div>
+            {topEx.length > 0 && (
+              <>
+                <Rule label="Most Performed"/>
+                {topEx.map(([id,count],i)=>{
+                  const ex=exerciseById(id), pct=count/(topEx[0][1]||1);
+                  return (
+                    <div key={id} style={{ display:"flex", alignItems:"center", gap:10, padding:"9px 0", borderBottom:"1px solid var(--rule)" }}>
+                      <span style={{ fontFamily:"var(--font-mono)", fontSize:10, color:"var(--ink-60)", width:20, flexShrink:0, textAlign:"right" }}>#{i+1}</span>
+                      <div style={{ flex:1, minWidth:0 }}>
+                        <div style={{ fontFamily:"var(--font-display)", fontSize:15 }}>{ex.name}</div>
+                        <div style={{ display:"flex", alignItems:"center", gap:6, marginTop:3 }}>
+                          <div style={{ flex:1, height:2, background:"var(--rule)" }}><div style={{ height:"100%", width:`${pct*100}%`, background:MG_COLORS[ex.group] }}/></div>
+                          <span style={{ fontFamily:"var(--font-mono)", fontSize:9, color:MG_COLORS[ex.group], textTransform:"uppercase", letterSpacing:0.1 }}>◆ {MG_LABEL[ex.group]}</span>
+                        </div>
+                      </div>
+                      <span style={{ fontFamily:"var(--font-mono)", fontSize:13, flexShrink:0, fontVariantNumeric:"tabular-nums" }}>{count}×</span>
+                    </div>
+                  );
+                })}
+              </>
+            )}
+            {recentWeeks.length > 0 && (
+              <>
+                <Rule label="Recent Weeks"/>
+                <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+                  {recentWeeks.map((w,i)=>{
+                    const d=new Date(w.completedAt);
+                    const dateStr=d.toLocaleDateString("en-AU",{day:"numeric",month:"short"});
+                    const daysDone=new Set(w.completions.map(c=>c.day)).size;
+                    const splitDays=SPLITS[w.split]?.days?.length||3;
+                    return (
+                      <div key={w.id} style={{ display:"flex", alignItems:"center", gap:12, padding:"11px 12px", border:"1px solid var(--rule)" }}>
+                        <div style={{ flex:1 }}>
+                          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline" }}>
+                            <span style={{ fontFamily:"var(--font-display)", fontSize:14 }}>{SPLITS[w.split]?.label||"Custom"}</span>
+                            <span style={{ fontFamily:"var(--font-mono)", fontSize:9, color:"var(--ink-60)", letterSpacing:0.08 }}>{dateStr}</span>
+                          </div>
+                          <div style={{ display:"flex", gap:4, marginTop:7 }}>
+                            {Array.from({length:splitDays}).map((_,j)=>(
+                              <div key={j} style={{ width:10, height:10, borderRadius:3, background:j<daysDone?MG_COLORS[MUSCLE_GROUPS[j%MUSCLE_GROUPS.length]]:"var(--rule)" }}/>
+                            ))}
+                          </div>
+                        </div>
+                        <span style={{ fontFamily:"var(--font-mono)", fontSize:12, color:"var(--ink-60)", fontVariantNumeric:"tabular-nums" }}>{daysDone}/{splitDays}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+            {weekHistory.length===0 && (
+              <div style={{ marginTop:40, textAlign:"center", color:"var(--ink-60)" }}>
+                <div style={{ fontFamily:"var(--font-display)", fontSize:18, fontStyle:"italic", marginBottom:8 }}>No history yet</div>
+                <div style={{ fontFamily:"var(--font-mono)", fontSize:10, letterSpacing:0.14, textTransform:"uppercase" }}>Complete your first week to unlock full analytics</div>
+              </div>
+            )}
+          </>
+        );
+        if (!isLocked) return lockedContent;
+        return (
+          <div style={{ position:"relative" }}>
+            <div style={{ filter:"blur(5px)", pointerEvents:"none", userSelect:"none", opacity:0.6 }}>
+              {lockedContent}
+            </div>
+            <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:16, padding:"0 32px", textAlign:"center" }}>
+              <div style={{ fontFamily:"var(--font-display)", fontSize:24, letterSpacing:-0.03, fontStyle:"italic", lineHeight:1.1 }}>Unlock Full Analytics</div>
+              <div style={{ fontFamily:"var(--font-mono)", fontSize:9.5, color:"var(--ink-60)", letterSpacing:0.1, textTransform:"uppercase", lineHeight:1.6 }}>Volume trends · Personal records · Muscle maps · Weekly history</div>
+              {!state.user ? (
+                <button onClick={()=>navigate({screen:"auth"})} style={{ fontFamily:"var(--font-mono)", fontSize:10.5, letterSpacing:0.16, textTransform:"uppercase", padding:"13px 24px", background:"var(--ink)", color:"var(--paper)", border:"none", cursor:"pointer" }}>Sign In / Sign Up →</button>
+              ) : (
+                <button onClick={()=>setShowPaywall&&setShowPaywall(true)} style={{ fontFamily:"var(--font-mono)", fontSize:10.5, letterSpacing:0.16, textTransform:"uppercase", padding:"13px 24px", background:"var(--ink)", color:"var(--paper)", border:"none", cursor:"pointer" }}>Subscribe to Unlock →</button>
+              )}
+            </div>
+          </div>
+        );
+      })()}
+    </div>
+  );
+}
+
+function ProfileScreen({ state, dispatch, navigate, onSignOut }) {
+  const { measurements={}, detailedMode, user, isPro, planType='free', weekHistory=[], activeSplit, detailedSets: stateDS={} } = state;
+  const [showSub, setShowSub] = useState(false);
+  const [showMeasures, setShowMeasures] = useState(false);
+
+  const totalWeeks = weekHistory.length;
+  const totalSets = weekHistory.reduce((t, w) => t + Object.values(w.detailedSets||{}).reduce((s, e) => s + e.length, 0), 0)
+    + Object.values(stateDS[activeSplit]||{}).reduce((s, e) => s + e.length, 0);
+
+  const MEASURES = [
+    { key:"weight_kg", label:"Weight", unit:"kg" },
+    { key:"height_cm", label:"Height", unit:"cm" },
+    { key:"body_fat",  label:"Body Fat", unit:"%" },
+    { key:"chest_cm",  label:"Chest",   unit:"cm" },
+    { key:"waist_cm",  label:"Waist",   unit:"cm" },
+    { key:"hip_cm",    label:"Hip",     unit:"cm" },
+    { key:"arm_cm",    label:"Arm",     unit:"cm" },
+    { key:"thigh_cm",  label:"Thigh",   unit:"cm" },
+    { key:"calf_cm",   label:"Calf",    unit:"cm" },
+  ];
+  const handleExport = () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type:"application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `mtm-${new Date().toISOString().slice(0,10)}.json`; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const SecHead = ({ label }) => (
+    <div style={{ fontFamily:"var(--font-mono)", fontSize:9, letterSpacing:0.2, textTransform:"uppercase", color:"var(--ink-60)", padding:"22px 0 10px" }}>{label}</div>
+  );
+  const Row = ({ label, value, sub, onClick, accent, last=false }) => (
+    <button onClick={onClick} style={{ width:"100%", display:"flex", alignItems:"center", gap:14, padding:"15px 0", background:"transparent", border:"none", borderBottom: last ? "none" : "1px solid var(--rule)", cursor: onClick ? "pointer" : "default", color: accent ? "var(--accent)" : "var(--ink)", textAlign:"left" }}>
+      <div style={{ flex:1 }}>
+        <div style={{ fontFamily:"var(--font-body)", fontSize:15.5, lineHeight:1.2, color: accent ? "var(--accent)" : "var(--ink)" }}>{label}</div>
+        {sub && <div style={{ fontFamily:"var(--font-mono)", fontSize:9, color:"var(--ink-60)", marginTop:2, letterSpacing:0.08 }}>{sub}</div>}
+      </div>
+      {value && <span style={{ fontFamily:"var(--font-mono)", fontSize:10, color:"var(--ink-60)", letterSpacing:0.1, flexShrink:0 }}>{value}</span>}
+      {onClick && <svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="var(--ink-30)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+    </button>
+  );
+
+  const planLabel = planType === 'free' ? 'Free' : planType === 'monthly' ? 'Pro · Monthly' : 'Pro · Yearly';
+
+  return (
+    <div style={{ padding:"0 24px 120px", color:"var(--ink)" }}>
+
+      {/* Header */}
+      {user ? (
+        <div style={{ paddingTop:20, paddingBottom:20, borderBottom:"1px solid var(--rule)" }}>
+          <div style={{ display:"flex", alignItems:"center", gap:14 }}>
+            <div style={{ width:52, height:52, borderRadius:999, border:"1.5px solid var(--rule)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, background:"var(--rule)" }}>
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="9" r="5" stroke="var(--ink-60)" strokeWidth="1.4"/><path d="M3 24c0-5.5 4.5-10 10-10s10 4.5 10 10" stroke="var(--ink-60)" strokeWidth="1.4" strokeLinecap="round"/></svg>
+            </div>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ fontFamily:"var(--font-display)", fontSize:24, letterSpacing:-0.15, lineHeight:1, fontStyle:"italic" }}>{user.name}</div>
+              <div style={{ fontFamily:"var(--font-mono)", fontSize:9, color:"var(--ink-60)", marginTop:4, letterSpacing:0.1, textTransform:"uppercase" }}>{user.email}</div>
+            </div>
+            <span style={{ fontFamily:"var(--font-mono)", fontSize:8, letterSpacing:0.16, textTransform:"uppercase", padding:"4px 10px", background: isPro ? "var(--accent)" : "transparent", color: isPro ? "#fff" : "var(--ink-60)", border: isPro ? "none" : "1px solid var(--rule)", flexShrink:0 }}>{isPro ? "Pro" : "Free"}</span>
+          </div>
+          {/* Stats row */}
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", marginTop:16, borderTop:"1px solid var(--rule)" }}>
+            {[
+              { v: totalWeeks, label:"Weeks" },
+              { v: totalSets,  label:"Sets" },
+              { v: user.daysPerWeek ? user.daysPerWeek+"/wk" : "—", label:"Goal" },
+            ].map((s, i) => (
+              <div key={i} style={{ padding:"12px 0", textAlign:"center", borderRight: i<2 ? "1px solid var(--rule)" : "none" }}>
+                <div style={{ fontFamily:"var(--font-display)", fontSize:28, letterSpacing:-0.04, lineHeight:1 }}>{s.v}</div>
+                <div style={{ fontFamily:"var(--font-mono)", fontSize:8, letterSpacing:0.16, textTransform:"uppercase", color:"var(--ink-60)", marginTop:4 }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div style={{ paddingTop:20, paddingBottom:20, borderBottom:"1px solid var(--rule)" }}>
+          <div style={{ fontFamily:"var(--font-display)", fontSize:42, lineHeight:0.95, letterSpacing:-0.035 }}><span style={{ fontStyle:"italic" }}>Profile</span></div>
+          <div style={{ marginTop:20, padding:"18px 0", textAlign:"center" }}>
+            <div style={{ fontFamily:"var(--font-display)", fontSize:16, letterSpacing:-0.1, marginBottom:12, fontStyle:"italic" }}>Sign in to sync your data</div>
+            <button onClick={()=>navigate({screen:"auth"})} style={{ fontFamily:"var(--font-mono)", fontSize:10, letterSpacing:0.14, textTransform:"uppercase", padding:"11px 22px", background:"var(--ink)", color:"var(--paper)", border:"none", cursor:"pointer" }}>Sign In / Sign Up →</button>
+          </div>
+        </div>
+      )}
+
+      {/* Account section */}
+      {user && (
+        <>
+          <SecHead label="Account"/>
+          {user.goal && <Row label="Goal" value={user.goal.charAt(0).toUpperCase()+user.goal.slice(1)} sub={[user.experience, user.daysPerWeek ? user.daysPerWeek+" days/week" : null].filter(Boolean).join(" · ")}/>}
+          <Row label="Subscription" value={planLabel} sub={isPro ? "Tap to change plan" : "Upgrade to unlock analytics"} onClick={()=>setShowSub(s=>!s)}/>
+          {showSub && (
+            <div style={{ paddingBottom:12 }}>
+              {[
+                { id:"free",    price:null,    period:null,    desc:"Basic tracking · No analytics" },
+                { id:"monthly", price:"$1.99", period:"/ mo",  desc:"All Pro features · Cancel anytime" },
+                { id:"yearly",  price:"$9.99", period:"/ yr",  desc:"≈ $0.83/month · Save 58%", badge:"Best Value" },
+              ].map(p => (
+                <button key={p.id} onClick={()=>{ dispatch({type:"SET_PLAN", planType:p.id}); if(p.id==="monthly") window.open(STRIPE_MONTHLY,"_blank"); if(p.id==="yearly") window.open(STRIPE_YEARLY,"_blank"); }}
+                  style={{ width:"100%", display:"flex", alignItems:"center", gap:12, padding:"13px 14px", marginBottom:6, background: planType===p.id ? "var(--ink)" : "transparent", color: planType===p.id ? "var(--paper)" : "var(--ink)", border:`1px solid ${planType===p.id?"var(--ink)":"var(--rule)"}`, cursor:"pointer", textAlign:"left", position:"relative", transition:"all 140ms" }}>
+                  {p.badge && <span style={{ position:"absolute", top:-8, left:10, background:"var(--accent)", color:"#fff", fontFamily:"var(--font-mono)", fontSize:7, letterSpacing:0.14, textTransform:"uppercase", padding:"2px 6px" }}>{p.badge}</span>}
+                  <div style={{ flex:1 }}>
+                    <div style={{ fontFamily:"var(--font-display)", fontSize:16, letterSpacing:-0.1 }}>{p.id.charAt(0).toUpperCase()+p.id.slice(1)}</div>
+                    <div style={{ fontFamily:"var(--font-mono)", fontSize:8.5, opacity:0.6, marginTop:2, letterSpacing:0.08 }}>{p.desc}</div>
+                  </div>
+                  {p.price
+                    ? <div style={{ textAlign:"right", flexShrink:0 }}><span style={{ fontFamily:"var(--font-display)", fontSize:18, letterSpacing:-0.05 }}>{p.price}</span><span style={{ fontFamily:"var(--font-mono)", fontSize:8.5, opacity:0.6, marginLeft:3 }}>{p.period}</span></div>
+                    : <span style={{ fontFamily:"var(--font-mono)", fontSize:9, opacity:0.6 }}>Free</span>
+                  }
+                  {planType===p.id && <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.2"/><path d="M4 7.2l2 2.2 4-4.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                </button>
+              ))}
+              {isPro && <div style={{ fontFamily:"var(--font-mono)", fontSize:8.5, color:"var(--ink-60)", letterSpacing:0.08, padding:"4px 2px" }}>To cancel, manage your subscription in Stripe.</div>}
+            </div>
+          )}
+          <Row label="Sign Out" onClick={onSignOut || (()=>dispatch({type:"SIGN_OUT"}))} accent/>
+          <Row label="Delete Account" onClick={()=>{ if(window.confirm('Permanently delete your account and all data? This cannot be undone.')) { if(onSignOut) onSignOut(); else dispatch({type:"SIGN_OUT"}); } }} accent last/>
+        </>
+      )}
+
+      {/* Preferences */}
+      <SecHead label="Preferences"/>
+      <Row label="Tracking Mode" value={detailedMode ? "Detailed" : "Simple"} sub={detailedMode ? "Sets + reps per exercise" : "Exercise checklist only"} onClick={()=>dispatch({type:"TOGGLE_DETAILED"})}/>
+      <Row label="Theme" value={state.theme==='ink' ? "Dark" : "Light"} onClick={()=>dispatch({type:"TOGGLE_THEME"})} last/>
+
+      {/* Measurements */}
+      <SecHead label="Measurements"/>
+      <Row label="Body Measurements" sub={Object.values(measurements).filter(Boolean).length+" logged"} onClick={()=>setShowMeasures(s=>!s)} last/>
+      {showMeasures && (
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, paddingBottom:12 }}>
+          {MEASURES.map(m=>(
+            <div key={m.key} style={{ border:"1px solid var(--rule)", padding:"10px 12px" }}>
+              <div style={{ fontFamily:"var(--font-mono)", fontSize:8.5, letterSpacing:0.14, textTransform:"uppercase", color:"var(--ink-60)", marginBottom:5 }}>{m.label}</div>
+              <div style={{ display:"flex", alignItems:"baseline", gap:4 }}>
+                <input type="number" placeholder="—" value={measurements[m.key]||""}
+                  onChange={e=>dispatch({ type:"UPDATE_MEASUREMENT", key:m.key, value:parseFloat(e.target.value)||null })}
+                  style={{ flex:1, width:0, fontFamily:"var(--font-display)", fontSize:22, letterSpacing:-0.05, color:"var(--ink)", background:"transparent", border:"none", outline:"none", padding:0 }}/>
+                <span style={{ fontFamily:"var(--font-mono)", fontSize:10, color:"var(--ink-60)" }}>{m.unit}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Data */}
+      <SecHead label="Data"/>
+      <Row label="Export All Data" sub="Full history, measurements and settings as JSON" onClick={handleExport} last/>
+    </div>
+  );
+}
+
+function LegalModal({ title, onClose }) {
+  const content = title === 'Privacy Policy' ? [
+    'MyTrainingMate collects your email address and workout data (exercises, sets, reps, body measurements) solely to provide the training tracking service.',
+    'Your data is stored locally on your device. When you create an account, data may be synced to our servers to enable cross-device access.',
+    'We do not sell your personal data to third parties.',
+    'Subscription payments are processed by Stripe. We do not store your payment details.',
+    'You may delete your account and all associated data at any time from the Profile screen.',
+    'For questions: privacy@mytrainingmate.app',
+  ] : [
+    'By using MyTrainingMate you agree to these Terms of Service.',
+    'MyTrainingMate is provided "as is" without warranty. Consult a physician before starting any exercise program.',
+    'Pro subscriptions are billed monthly or annually. Cancel anytime — cancellations take effect at the end of the billing period.',
+    'Refunds are subject to the App Store or Google Play refund policies.',
+    'We reserve the right to update these terms. Continued use constitutes acceptance.',
+    'Contact: support@mytrainingmate.app',
+  ];
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.6)', zIndex:400, display:'flex', alignItems:'flex-end' }} onClick={onClose}>
+      <div onClick={e=>e.stopPropagation()} style={{ background:'var(--paper)', width:'100%', maxHeight:'80vh', overflowY:'auto', padding:'28px 24px 48px', boxSizing:'border-box', borderRadius:'20px 20px 0 0', color:'var(--ink)' }}>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:20 }}>
+          <div style={{ fontFamily:'var(--font-display)', fontSize:22, fontStyle:'italic' }}>{title}</div>
+          <button onClick={onClose} style={{ background:'transparent', border:'1px solid var(--rule)', fontFamily:'var(--font-mono)', fontSize:14, color:'var(--ink-60)', cursor:'pointer', width:30, height:30, display:'flex', alignItems:'center', justifyContent:'center' }}>×</button>
+        </div>
+        {content.map((p,i) => (
+          <div key={i} style={{ fontFamily:'var(--font-body)', fontSize:13.5, lineHeight:1.65, color:'var(--ink)', marginBottom:14, paddingBottom:14, borderBottom: i<content.length-1 ? '1px solid var(--rule)' : 'none' }}>{p}</div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AuthScreen({ state, dispatch, navigate }) {
+  const { useState: useStateAuth } = React;
+  const [mode, setMode] = useStateAuth('welcome');
+  const [signupStep, setSignupStep] = useStateAuth(0);
+  const [form, setForm] = useStateAuth({ email:'', password:'', name:'', goal:'', experience:'', daysPerWeek:'4' });
+  const [termsOk, setTermsOk] = useStateAuth(false);
+  const [error, setError] = useStateAuth('');
+  const [loading, setLoading] = useStateAuth(false);
+  const [legalModal, setLegalModal] = useStateAuth(null);
+  const set = (k, v) => setForm(f => ({...f, [k]:v}));
+  const GOALS = [
+    { id:'muscle',   label:'Build Muscle',    sub:'Gain strength & size' },
+    { id:'lose',     label:'Lose Weight',      sub:'Cut fat, stay lean' },
+    { id:'fitness',  label:'Improve Fitness',  sub:'Cardio & endurance' },
+    { id:'active',   label:'Stay Active',      sub:'Healthy habits' },
+  ];
+  const EXPERIENCES = [
+    { id:'beginner',     label:'Beginner',     sub:'< 1 year' },
+    { id:'intermediate', label:'Intermediate', sub:'1–3 years' },
+    { id:'advanced',     label:'Advanced',     sub:'3+ years' },
+  ];
+  const DAYS = ['3','4','5','6'];
+  const STEPS = ['account','name','goal','experience','days','plan'];
+
+  const doSignIn = async () => {
+    if (!form.email || !form.password) { setError('Please fill in all fields'); return; }
+    setLoading(true); setError('');
+    const { data, error: err } = await sb.auth.signInWithPassword({ email: form.email, password: form.password });
+    if (err) { setError(err.message); setLoading(false); return; }
+    const { data: ud } = await sb.from('user_data').select('profile,training').eq('user_id', data.user.id).maybeSingle();
+    if (ud?.training) {
+      dispatch({ type:'LOAD_CLOUD', profile: ud.profile || {}, training: ud.training });
+    } else {
+      dispatch({ type:'SET_USER', user:{ email: data.user.email, ...(data.user.user_metadata || {}) } });
+    }
+    setLoading(false);
+    navigate({ screen:'home' });
+  };
+  const doCreateAccount = async (planType) => {
+    const { data, error: err } = await sb.auth.signUp({
+      email: form.email,
+      password: form.password,
+      options: { data: { name: form.name, goal: form.goal, experience: form.experience, daysPerWeek: form.daysPerWeek } }
+    });
+    if (err) { setError(err.message); setLoading(false); return false; }
+    if (!data.session) { setLoading(false); setMode('email-confirm'); return false; }
+    dispatch({ type:'SET_USER', user:{ email:form.email, name:form.name, goal:form.goal, experience:form.experience, daysPerWeek:form.daysPerWeek } });
+    if (planType !== 'free') {
+      dispatch({ type:'SET_PLAN', planType });
+      window.open(planType==='monthly' ? STRIPE_MONTHLY : STRIPE_YEARLY, '_blank');
+    }
+    navigate({ screen:'home' });
+    return true;
+  };
+  const doNext = async () => {
+    const step = STEPS[signupStep];
+    if (step==='account' && (!form.email || !form.password)) { setError('Fill in email and password'); return; }
+    if (step==='name' && !form.name.trim()) { setError('Enter your name'); return; }
+    if (step==='goal' && !form.goal) { setError('Select a goal'); return; }
+    if (step==='experience' && !form.experience) { setError('Select your level'); return; }
+    if (step==='plan' && !termsOk) { setError('Accept the terms to continue'); return; }
+    setError('');
+    if (signupStep < STEPS.length-1) { setSignupStep(s=>s+1); return; }
+    setLoading(true);
+    await doCreateAccount(form.selectedPlan==='monthly' ? 'monthly' : 'yearly');
+  };
+  const skipPlan = async () => {
+    setLoading(true); setError('');
+    await doCreateAccount('free');
+  };
+
+  const inputStyle = { width:'100%', fontFamily:'var(--font-mono)', fontSize:14, padding:'12px 14px', border:'1px solid var(--ink-30)', background:'transparent', color:'var(--ink)', outline:'none', boxSizing:'border-box' };
+  const labelStyle = { fontFamily:'var(--font-mono)', fontSize:8.5, letterSpacing:0.14, textTransform:'uppercase', color:'var(--ink-60)', marginBottom:6 };
+  const cardBtn = (selected) => ({ padding:'16px 18px', textAlign:'left', background:selected?'var(--ink)':'transparent', color:selected?'var(--paper)':'var(--ink)', border:`1px solid ${selected?'var(--ink)':'var(--rule)'}`, cursor:'pointer', display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%' });
+  const checkIcon = <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="white" strokeWidth="1.5"/><path d="M4.5 8.5l2.5 2.5 5-5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+
+  if (mode==='welcome') return (
+    <div style={{ padding:'0 24px 120px', color:'var(--ink)' }}>
+      <div style={{ paddingTop:8 }}>
+        <div style={{ fontFamily:'var(--font-mono)', fontSize:10, letterSpacing:0.18, textTransform:'uppercase', color:'var(--ink-60)' }}>Account</div>
+        <div style={{ fontFamily:'var(--font-display)', fontSize:42, lineHeight:0.95, letterSpacing:-0.035, marginTop:10 }}><span style={{ fontStyle:'italic' }}>Welcome</span></div>
+      </div>
+      <div style={{ textAlign:'center', padding:'32px 0 32px' }}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 1024 1024" style={{ display:'block', margin:'0 auto' }}>
+          <rect width="1024" height="1024" fill="#0f0f0f"/>
+          <rect x="398" y="248" width="228" height="22" rx="11" fill="#ffffff"/>
+          <rect x="377" y="232" width="24" height="54" rx="5" fill="#ffffff"/>
+          <rect x="340" y="218" width="36" height="82" rx="7" fill="#ffffff"/>
+          <rect x="304" y="205" width="34" height="108" rx="7" fill="#ffffff"/>
+          <rect x="270" y="192" width="30" height="134" rx="7" fill="#ffffff"/>
+          <rect x="623" y="232" width="24" height="54" rx="5" fill="#ffffff"/>
+          <rect x="648" y="218" width="36" height="82" rx="7" fill="#ffffff"/>
+          <rect x="686" y="205" width="34" height="108" rx="7" fill="#ffffff"/>
+          <rect x="720" y="192" width="30" height="134" rx="7" fill="#ffffff"/>
+          <rect x="180" y="400" width="664" height="3" fill="#C8F135"/>
+          <text x="512" y="680" textAnchor="middle" fontFamily="Helvetica Neue, Helvetica, Arial, sans-serif" fontSize="280" fontWeight="500" fontStyle="italic" letterSpacing="-8" fill="#ffffff">MTM</text>
+          <rect x="180" y="706" width="664" height="3" fill="#C8F135"/>
+          <text x="512" y="790" textAnchor="middle" fontFamily="Helvetica Neue, Helvetica, Arial, sans-serif" fontSize="38" fontWeight="400" fontStyle="italic" letterSpacing="14" fill="#C8F135">MY TRAINING MATE</text>
+          <text x="512" y="880" textAnchor="middle" fontFamily="Helvetica Neue, Helvetica, Arial, sans-serif" fontSize="26" fontWeight="400" letterSpacing="8" fill="#ffffff" opacity="0.3">TRAIN SMART</text>
+        </svg>
+      </div>
+      <button onClick={()=>setMode('signup')} style={{ width:'100%', fontFamily:'var(--font-mono)', fontSize:11, letterSpacing:0.18, textTransform:'uppercase', padding:17, background:'var(--ink)', color:'var(--paper)', border:'none', cursor:'pointer', marginBottom:12 }}>Create Account</button>
+      <button onClick={()=>setMode('signin')} style={{ width:'100%', fontFamily:'var(--font-mono)', fontSize:11, letterSpacing:0.18, textTransform:'uppercase', padding:16, background:'transparent', color:'var(--ink)', border:'1px solid var(--ink)', cursor:'pointer' }}>Sign In</button>
+      <div style={{ fontFamily:'var(--font-mono)', fontSize:8.5, color:'var(--ink-60)', textAlign:'center', marginTop:20, lineHeight:1.7 }}>
+        By continuing you agree to our <span onClick={()=>setLegalModal('Terms of Service')} style={{ textDecoration:'underline', cursor:'pointer' }}>Terms of Service</span> and <span onClick={()=>setLegalModal('Privacy Policy')} style={{ textDecoration:'underline', cursor:'pointer' }}>Privacy Policy</span>
+      </div>
+      {legalModal && <LegalModal title={legalModal} onClose={()=>setLegalModal(null)}/>}
+    </div>
+  );
+
+  if (mode==='signin') return (
+    <div style={{ padding:'0 24px 120px', color:'var(--ink)' }}>
+      <div style={{ paddingTop:8, display:'flex', alignItems:'center', gap:12, marginBottom:32 }}>
+        <button onClick={()=>setMode('welcome')} style={{ background:'transparent', border:'1px solid var(--rule)', fontFamily:'var(--font-mono)', fontSize:10.5, letterSpacing:0.16, textTransform:'uppercase', color:'var(--ink)', padding:'10px 14px', minHeight:44, display:'flex', alignItems:'center', cursor:'pointer' }}>← Back</button>
+        <div style={{ fontFamily:'var(--font-display)', fontSize:28, letterSpacing:-0.03, fontStyle:'italic' }}>Sign In</div>
+      </div>
+      {error && <div style={{ fontFamily:'var(--font-mono)', fontSize:9.5, color:'var(--accent)', marginBottom:12, letterSpacing:0.1 }}>{error}</div>}
+      <div style={{ display:'flex', flexDirection:'column', gap:12, marginBottom:24 }}>
+        <div><div style={labelStyle}>Email</div><input type="email" value={form.email} onChange={e=>set('email',e.target.value)} placeholder="you@example.com" style={inputStyle}/></div>
+        <div><div style={labelStyle}>Password</div><input type="password" value={form.password} onChange={e=>set('password',e.target.value)} placeholder="••••••••" style={inputStyle}/></div>
+      </div>
+      <button onClick={doSignIn} disabled={loading} style={{ width:'100%', fontFamily:'var(--font-mono)', fontSize:11, letterSpacing:0.18, textTransform:'uppercase', padding:17, background:'var(--ink)', color:'var(--paper)', border:'none', cursor:'pointer', marginBottom:14, opacity:loading?0.6:1 }}>{loading ? 'Signing in…' : 'Sign In'}</button>
+      <div style={{ textAlign:'center', fontFamily:'var(--font-mono)', fontSize:9.5, color:'var(--ink-60)', marginBottom:10 }}>
+        <span onClick={()=>setMode('forgot')} style={{ color:'var(--ink)', textDecoration:'underline', cursor:'pointer' }}>Forgot password?</span>
+      </div>
+      <div style={{ textAlign:'center', fontFamily:'var(--font-mono)', fontSize:9.5, color:'var(--ink-60)' }}>
+        No account?{' '}<span onClick={()=>{setMode('signup');setError('');}} style={{ color:'var(--ink)', textDecoration:'underline', cursor:'pointer' }}>Create one →</span>
+      </div>
+    </div>
+  );
+
+  if (mode==='forgot') return (
+    <div style={{ padding:'0 24px 120px', color:'var(--ink)' }}>
+      <div style={{ paddingTop:8, display:'flex', alignItems:'center', gap:12, marginBottom:32 }}>
+        <button onClick={()=>setMode('signin')} style={{ background:'transparent', border:'1px solid var(--rule)', fontFamily:'var(--font-mono)', fontSize:10.5, letterSpacing:0.16, textTransform:'uppercase', color:'var(--ink)', padding:'10px 14px', minHeight:44, display:'flex', alignItems:'center', cursor:'pointer' }}>← Back</button>
+        <div style={{ fontFamily:'var(--font-display)', fontSize:28, letterSpacing:-0.03, fontStyle:'italic' }}>Reset Password</div>
+      </div>
+      <div style={{ fontFamily:'var(--font-mono)', fontSize:9.5, color:'var(--ink-60)', letterSpacing:0.1, marginBottom:20, lineHeight:1.6 }}>
+        Enter your email and we'll send you a link to reset your password.
+      </div>
+      <div style={{ marginBottom:20 }}>
+        <div style={labelStyle}>Email</div>
+        <input type="email" value={form.email} onChange={e=>set('email',e.target.value)} placeholder="you@example.com" style={inputStyle}/>
+      </div>
+      {error && <div style={{ fontFamily:'var(--font-mono)', fontSize:9.5, color:'var(--accent)', marginBottom:12 }}>{error}</div>}
+      <button onClick={async()=>{ if(!form.email.includes('@')){setError('Enter a valid email');return;} setLoading(true); setError(''); await sb.auth.resetPasswordForEmail(form.email,{redirectTo:window.location.origin}); setLoading(false); setMode('forgot-sent'); }} disabled={loading} style={{ width:'100%', fontFamily:'var(--font-mono)', fontSize:11, letterSpacing:0.18, textTransform:'uppercase', padding:17, background:'var(--ink)', color:'var(--paper)', border:'none', cursor:'pointer', opacity:loading?0.6:1 }}>{loading ? '…' : 'Send Reset Link'}</button>
+    </div>
+  );
+
+  if (mode==='forgot-sent') return (
+    <div style={{ padding:'0 24px 120px', color:'var(--ink)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', minHeight:300, textAlign:'center' }}>
+      <div style={{ fontFamily:'var(--font-display)', fontSize:32, fontStyle:'italic', marginBottom:12 }}>Check your email</div>
+      <div style={{ fontFamily:'var(--font-mono)', fontSize:9.5, color:'var(--ink-60)', letterSpacing:0.1, lineHeight:1.7, marginBottom:28 }}>
+        We've sent a password reset link to{'\n'}<span style={{ color:'var(--ink)' }}>{form.email}</span>
+      </div>
+      <button onClick={()=>setMode('signin')} style={{ fontFamily:'var(--font-mono)', fontSize:10.5, letterSpacing:0.16, textTransform:'uppercase', padding:'12px 24px', background:'transparent', color:'var(--ink)', border:'1px solid var(--ink)', cursor:'pointer' }}>Back to Sign In</button>
+    </div>
+  );
+
+  if (mode==='email-confirm') return (
+    <div style={{ padding:'0 24px 120px', color:'var(--ink)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', minHeight:300, textAlign:'center' }}>
+      <div style={{ fontFamily:'var(--font-display)', fontSize:32, fontStyle:'italic', marginBottom:12 }}>Confirm your email</div>
+      <div style={{ fontFamily:'var(--font-mono)', fontSize:9.5, color:'var(--ink-60)', letterSpacing:0.1, lineHeight:1.7, marginBottom:28 }}>
+        We sent a confirmation link to{'\n'}<span style={{ color:'var(--ink)' }}>{form.email}</span>{'\n'}Click it then come back to sign in.
+      </div>
+      <button onClick={()=>setMode('signin')} style={{ fontFamily:'var(--font-mono)', fontSize:10.5, letterSpacing:0.16, textTransform:'uppercase', padding:'12px 24px', background:'var(--ink)', color:'var(--paper)', border:'none', cursor:'pointer' }}>Go to Sign In</button>
+    </div>
+  );
+
+  const step = STEPS[signupStep];
+  return (
+    <div style={{ padding:'0 24px 120px', color:'var(--ink)' }}>
+      <div style={{ paddingTop:8, display:'flex', alignItems:'center', gap:12 }}>
+        <button onClick={()=>{if(signupStep===0)setMode('welcome');else setSignupStep(s=>s-1);setError('');}}
+          style={{ background:'transparent', border:'1px solid var(--rule)', fontFamily:'var(--font-mono)', fontSize:10.5, letterSpacing:0.16, textTransform:'uppercase', color:'var(--ink)', padding:'10px 14px', minHeight:44, display:'flex', alignItems:'center', cursor:'pointer' }}>← Back</button>
+        <div style={{ fontFamily:'var(--font-mono)', fontSize:9, letterSpacing:0.14, textTransform:'uppercase', color:'var(--ink-60)' }}>{signupStep+1} / {STEPS.length}</div>
+      </div>
+      <div style={{ height:2, background:'var(--rule)', marginTop:14, marginBottom:28 }}>
+        <div style={{ height:'100%', width:`${(signupStep+1)/STEPS.length*100}%`, background:'var(--ink)', transition:'width 300ms ease' }}/>
+      </div>
+      {error && <div style={{ fontFamily:'var(--font-mono)', fontSize:9.5, color:'var(--accent)', marginBottom:12, letterSpacing:0.1 }}>{error}</div>}
+
+      {step==='account' && <>
+        <div style={{ fontFamily:'var(--font-display)', fontSize:30, letterSpacing:-0.03, fontStyle:'italic', marginBottom:6 }}>Create Account</div>
+        <div style={{ fontFamily:'var(--font-mono)', fontSize:10, color:'var(--ink-60)', letterSpacing:0.1, marginBottom:24 }}>Your login details</div>
+        <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+          <div><div style={labelStyle}>Email</div><input type="email" value={form.email} onChange={e=>set('email',e.target.value)} placeholder="you@example.com" style={inputStyle}/></div>
+          <div><div style={labelStyle}>Password</div><input type="password" value={form.password} onChange={e=>set('password',e.target.value)} placeholder="min 8 characters" style={inputStyle}/></div>
+        </div>
+      </>}
+
+      {step==='name' && <>
+        <div style={{ fontFamily:'var(--font-display)', fontSize:30, letterSpacing:-0.03, fontStyle:'italic', marginBottom:6 }}>What's your name?</div>
+        <div style={{ fontFamily:'var(--font-mono)', fontSize:10, color:'var(--ink-60)', letterSpacing:0.1, marginBottom:24 }}>How you'll appear in the app</div>
+        <input type="text" value={form.name} onChange={e=>set('name',e.target.value)} placeholder="First name"
+          style={{ width:'100%', fontFamily:'var(--font-display)', fontSize:22, padding:'14px 16px', border:'1px solid var(--ink-30)', background:'transparent', color:'var(--ink)', outline:'none', boxSizing:'border-box', letterSpacing:-0.02 }}/>
+      </>}
+
+      {step==='goal' && <>
+        <div style={{ fontFamily:'var(--font-display)', fontSize:30, letterSpacing:-0.03, fontStyle:'italic', marginBottom:6 }}>What's your goal?</div>
+        <div style={{ fontFamily:'var(--font-mono)', fontSize:10, color:'var(--ink-60)', letterSpacing:0.1, marginBottom:20 }}>We'll personalise your experience</div>
+        <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+          {GOALS.map(g=>(
+            <button key={g.id} onClick={()=>set('goal',g.id)} style={cardBtn(form.goal===g.id)}>
+              <div>
+                <div style={{ fontFamily:'var(--font-display)', fontSize:17, letterSpacing:-0.1 }}>{g.label}</div>
+                <div style={{ fontFamily:'var(--font-mono)', fontSize:9, color:form.goal===g.id?'rgba(255,255,255,0.6)':'var(--ink-60)', marginTop:3, letterSpacing:0.1, textTransform:'uppercase' }}>{g.sub}</div>
+              </div>
+              {form.goal===g.id && checkIcon}
+            </button>
+          ))}
+        </div>
+      </>}
+
+      {step==='experience' && <>
+        <div style={{ fontFamily:'var(--font-display)', fontSize:30, letterSpacing:-0.03, fontStyle:'italic', marginBottom:6 }}>Experience level?</div>
+        <div style={{ fontFamily:'var(--font-mono)', fontSize:10, color:'var(--ink-60)', letterSpacing:0.1, marginBottom:20 }}>Honest answer is best</div>
+        <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+          {EXPERIENCES.map(e=>(
+            <button key={e.id} onClick={()=>set('experience',e.id)} style={cardBtn(form.experience===e.id)}>
+              <div>
+                <div style={{ fontFamily:'var(--font-display)', fontSize:17, letterSpacing:-0.1 }}>{e.label}</div>
+                <div style={{ fontFamily:'var(--font-mono)', fontSize:9, color:form.experience===e.id?'rgba(255,255,255,0.6)':'var(--ink-60)', marginTop:3, letterSpacing:0.1, textTransform:'uppercase' }}>{e.sub}</div>
+              </div>
+              {form.experience===e.id && checkIcon}
+            </button>
+          ))}
+        </div>
+      </>}
+
+      {step==='days' && <>
+        <div style={{ fontFamily:'var(--font-display)', fontSize:30, letterSpacing:-0.03, fontStyle:'italic', marginBottom:6 }}>Days per week?</div>
+        <div style={{ fontFamily:'var(--font-mono)', fontSize:10, color:'var(--ink-60)', letterSpacing:0.1, marginBottom:20 }}>How often do you train?</div>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8 }}>
+          {DAYS.map(d=>(
+            <button key={d} onClick={()=>set('daysPerWeek',d)}
+              style={{ padding:20, textAlign:'center', background:form.daysPerWeek===d?'var(--ink)':'transparent', color:form.daysPerWeek===d?'var(--paper)':'var(--ink)', border:`1px solid ${form.daysPerWeek===d?'var(--ink)':'var(--rule)'}`, cursor:'pointer' }}>
+              <div style={{ fontFamily:'var(--font-display)', fontSize:36, letterSpacing:-0.04, lineHeight:1 }}>{d}</div>
+              <div style={{ fontFamily:'var(--font-mono)', fontSize:9, letterSpacing:0.1, textTransform:'uppercase', color:form.daysPerWeek===d?'rgba(255,255,255,0.6)':'var(--ink-60)', marginTop:6 }}>days/wk</div>
+            </button>
+          ))}
+        </div>
+      </>}
+
+      {step==='plan' && <>
+        <div style={{ fontFamily:'var(--font-display)', fontSize:30, letterSpacing:-0.03, fontStyle:'italic', marginBottom:6 }}>Choose your plan</div>
+        <div style={{ fontFamily:'var(--font-mono)', fontSize:10, color:'var(--ink-60)', letterSpacing:0.1, marginBottom:20 }}>Unlock the full experience</div>
+        <div style={{ display:'flex', flexDirection:'column', gap:10, marginBottom:20 }}>
+          {[
+            { label:'Advanced Analytics', sub:'Volume trends, PRs, fatigue patterns' },
+            { label:'Fill the Gap', sub:'AI spots lagging muscles automatically' },
+            { label:'Unlimited Splits', sub:'Build and save any routine' },
+          ].map((f,i)=>(
+            <div key={i} style={{ display:'flex', gap:12, alignItems:'flex-start' }}>
+              <div style={{ width:6, height:6, borderRadius:999, background:'var(--accent)', flexShrink:0, marginTop:6 }}/>
+              <div>
+                <div style={{ fontFamily:'var(--font-display)', fontSize:15, letterSpacing:-0.1 }}>{f.label}</div>
+                <div style={{ fontFamily:'var(--font-body)', fontSize:12, color:'var(--ink-60)', marginTop:2, fontStyle:'italic' }}>{f.sub}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ display:'flex', flexDirection:'column', gap:10, marginBottom:20 }}>
+          {/* Yearly plan */}
+          <button onClick={()=>set('selectedPlan','yearly')} style={{ border: form.selectedPlan!=='monthly' ? '2px solid var(--ink)' : '1px solid var(--rule)', padding:'16px 18px', position:'relative', background: form.selectedPlan!=='monthly' ? 'var(--ink)' : 'transparent', color: form.selectedPlan!=='monthly' ? 'var(--paper)' : 'var(--ink)', cursor:'pointer', textAlign:'left', transition:'all 160ms' }}>
+            <div style={{ position:'absolute', top:-10, left:14, background:'var(--accent)', color:'#fff', fontFamily:'var(--font-mono)', fontSize:8, letterSpacing:0.14, textTransform:'uppercase', padding:'2px 8px' }}>Best Value</div>
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline' }}>
+              <div style={{ fontFamily:'var(--font-display)', fontSize:18, letterSpacing:-0.1 }}>Yearly</div>
+              <div><span style={{ fontFamily:'var(--font-display)', fontSize:22, letterSpacing:-0.05 }}>$9.99</span><span style={{ fontFamily:'var(--font-mono)', fontSize:9, opacity:0.6, marginLeft:4 }}>AUD / year</span></div>
+            </div>
+            <div style={{ fontFamily:'var(--font-mono)', fontSize:9, opacity:0.6, marginTop:4, letterSpacing:0.08 }}>≈ $0.83/month · Save 17%</div>
+          </button>
+          {/* Monthly plan */}
+          <button onClick={()=>set('selectedPlan','monthly')} style={{ border: form.selectedPlan==='monthly' ? '2px solid var(--ink)' : '1px solid var(--rule)', padding:'16px 18px', background: form.selectedPlan==='monthly' ? 'var(--ink)' : 'transparent', color: form.selectedPlan==='monthly' ? 'var(--paper)' : 'var(--ink)', cursor:'pointer', textAlign:'left', transition:'all 160ms' }}>
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline' }}>
+              <div style={{ fontFamily:'var(--font-display)', fontSize:18, letterSpacing:-0.1 }}>Monthly</div>
+              <div><span style={{ fontFamily:'var(--font-display)', fontSize:22, letterSpacing:-0.05 }}>$1.99</span><span style={{ fontFamily:'var(--font-mono)', fontSize:9, opacity:0.6, marginLeft:4 }}>AUD / month</span></div>
+            </div>
+            <div style={{ fontFamily:'var(--font-mono)', fontSize:9, opacity:0.6, marginTop:4, letterSpacing:0.08 }}>Billed monthly · Cancel anytime</div>
+          </button>
+        </div>
+        <button onClick={()=>setTermsOk(t=>!t)} style={{ display:'flex', alignItems:'center', gap:10, background:'transparent', border:'none', cursor:'pointer', color:'var(--ink)', padding:'8px 0', width:'100%' }}>
+          <div style={{ width:20, height:20, border:`1.5px solid ${termsOk?'var(--ink)':'var(--ink-30)'}`, background:termsOk?'var(--ink)':'transparent', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, transition:'all 180ms' }}>
+            {termsOk && <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6.5l2.5 2.5L10 3.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+          </div>
+          <span style={{ fontFamily:'var(--font-mono)', fontSize:10, letterSpacing:0.1, textAlign:'left' }}>
+            I agree to the <span onClick={()=>setLegalModal('Terms of Service')} style={{ textDecoration:'underline', cursor:'pointer' }}>Terms of Service</span> and <span onClick={()=>setLegalModal('Privacy Policy')} style={{ textDecoration:'underline', cursor:'pointer' }}>Privacy Policy</span>
+          </span>
+        </button>
+      </>}
+
+      <div style={{ marginTop:32 }}>
+        <button onClick={doNext} disabled={loading} style={{ width:'100%', fontFamily:'var(--font-mono)', fontSize:11, letterSpacing:0.18, textTransform:'uppercase', padding:17, background:'var(--ink)', color:'var(--paper)', border:'none', cursor:'pointer', opacity:loading?0.6:1 }}>
+          {loading ? '…' : step==='plan' ? `Start Pro — ${form.selectedPlan==='monthly' ? '$1.99/mo' : '$9.99/yr'} →` : 'Continue →'}
+        </button>
+        {step==='plan' && (
+          <button onClick={skipPlan} disabled={loading} style={{ width:'100%', fontFamily:'var(--font-mono)', fontSize:10, letterSpacing:0.14, textTransform:'uppercase', padding:14, background:'transparent', color:'var(--ink-60)', border:'none', cursor:'pointer', marginTop:6, opacity:loading?0.6:1 }}>
+            {loading ? '…' : 'Continue Free — Limited features'}
+          </button>
+        )}
+        {step==='account' && (
+          <div style={{ textAlign:'center', fontFamily:'var(--font-mono)', fontSize:9.5, color:'var(--ink-60)', marginTop:14 }}>
+            Have an account? <span onClick={()=>{setMode('signin');setError('');}} style={{ color:'var(--ink)', textDecoration:'underline', cursor:'pointer' }}>Sign in</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const STRIPE_PK      = 'pk_live_51TJObr2c5hGzCMPfJS6oeIZuPB5hLuBmawy5pvePFNL5o2eZYurvW40qt2kl7VRJ5piLbqEYHhu7qEuOi9j6anIr00BZbE1yKJ';
+const STRIPE_MONTHLY = 'https://buy.stripe.com/bJebIU03X5ZHchObO0bfO01';
+const STRIPE_YEARLY  = 'https://buy.stripe.com/5kQ8wI03X87P3Li3hubfO00';
+
+Object.assign(window, { WorkoutCalendar, BodyMap, Dashboard, DayScreen, AnalyticsScreen, ProfileScreen, AuthScreen, PaywallModal, computeProgress });
+</script>
+
+<!-- ═══ APP ═══ -->
+<script type="text/babel">
+const { useReducer, useEffect: useEffectApp, useState: useStateApp, useRef: useRefApp } = React;
+
+const ACCENT_CHOICES = { vermilion:"oklch(0.58 0.20 28)", ink:"oklch(0.22 0.02 260)", olive:"oklch(0.55 0.11 115)", cobalt:"oklch(0.48 0.17 258)" };
+const VARIANTS = {
+  paper: { paper:"oklch(0.968 0.008 78)", ink:"oklch(0.18 0.015 60)", ink60:"oklch(0.45 0.012 60)", ink30:"oklch(0.72 0.008 60)", rule:"oklch(0.88 0.01 75)", accentTint:"oklch(0.95 0.03 28 / 0.6)" },
+  ink:   { paper:"oklch(0.16 0.012 260)", ink:"oklch(0.95 0.008 80)", ink60:"oklch(0.68 0.012 80)", ink30:"oklch(0.54 0.012 80)", rule:"oklch(0.36 0.012 260)", accentTint:"oklch(0.22 0.04 28 / 0.5)" },
+  court: { paper:"oklch(0.94 0.015 95)",  ink:"oklch(0.22 0.04 160)", ink60:"oklch(0.48 0.03 160)", ink30:"oklch(0.72 0.015 160)", rule:"oklch(0.82 0.02 95)", accentTint:"oklch(0.92 0.04 28 / 0.6)" },
+};
+const TYPE_PAIRS = {
+  "serif-geist": { display:`"Instrument Serif","Times New Roman",serif`, body:`"Geist","Helvetica Neue",system-ui,sans-serif`, mono:`"Geist Mono",ui-monospace,monospace` },
+  "editorial":   { display:`"EB Garamond",Georgia,serif`, body:`"EB Garamond",Georgia,serif`, mono:`"IBM Plex Mono",ui-monospace,monospace` },
+};
+
+const INITIAL_STATE = {
+  activeSplit:   "pushPull",
+  completions:   { pushPull:[], upperLower:[], fullBody:[], custom:[] },
+  completedDays: { pushPull:[], upperLower:[], fullBody:[], custom:[] },
+  setsLog:       { pushPull:{}, upperLower:{}, fullBody:{}, custom:{} },
+  hiddenSlots:   { pushPull:{}, upperLower:{}, fullBody:{}, custom:{} },
+  extraPlan:     { pushPull:{}, upperLower:{}, fullBody:{}, custom:{} },
+  detailedSets:  { pushPull:{}, upperLower:{}, fullBody:{}, custom:{} },
+  customPlan:    { days:[] },
+  extraDays:     { pushPull:null, upperLower:null, fullBody:null },
+  detailedMode:  false,
+  theme:         'paper',
+  isPro:         false,
+  planType:      'free',
+  user:          null,
+  weekHistory:   [],
+  bodyLog:       [],
+  measurements:  {},
+};
+
+function loadState() {
+  try {
+    const s = localStorage.getItem("tl-state");
+    if (!s) return INITIAL_STATE;
+    const parsed = JSON.parse(s);
+    if (Array.isArray(parsed.completions)) return INITIAL_STATE;
+    const activeSplit = SPLITS[parsed.activeSplit] ? parsed.activeSplit : "pushPull";
+    return {
+      activeSplit,
+      completions:   { ...INITIAL_STATE.completions,   ...(parsed.completions   || {}) },
+      completedDays: { ...INITIAL_STATE.completedDays, ...(parsed.completedDays || {}) },
+      setsLog:       { ...INITIAL_STATE.setsLog,       ...(parsed.setsLog       || {}) },
+      hiddenSlots:   { ...INITIAL_STATE.hiddenSlots,   ...(parsed.hiddenSlots   || {}) },
+      extraPlan:     { ...INITIAL_STATE.extraPlan,     ...(parsed.extraPlan     || {}) },
+      detailedSets:  { ...INITIAL_STATE.detailedSets,  ...(parsed.detailedSets  || {}) },
+      customPlan:    parsed.customPlan    || { days:[] },
+      extraDays:     { ...INITIAL_STATE.extraDays,     ...(parsed.extraDays     || {}) },
+      detailedMode:  parsed.detailedMode  || false,
+      theme:         parsed.theme         || 'paper',
+      isPro:         parsed.isPro         || false,
+      planType:      parsed.planType      || (parsed.isPro ? 'yearly' : 'free'),
+      weekHistory:   parsed.weekHistory   || [],
+      bodyLog:       parsed.bodyLog       || [],
+      user:          parsed.user           || null,
+      measurements:  parsed.measurements  || {},
+    };
+  } catch { return INITIAL_STATE; }
+}
+
+function reducer(state, action) {
+  const split = action.split || state.activeSplit;
+  const sc = state.completions[split] || [];
+  const sd = state.completedDays[split] || [];
+  const ss = state.setsLog[split] || {};
+  const sh = state.hiddenSlots[split] || {};
+
+  switch(action.type) {
+    case "SET_SPLIT":
+      return { ...state, activeSplit: action.split };
+
+    case "TOGGLE_DETAILED":
+      return { ...state, detailedMode: !state.detailedMode };
+
+    case "TOGGLE_THEME":
+      return { ...state, theme: state.theme === 'ink' ? 'paper' : 'ink' };
+
+    case "ADD_SET_ENTRY": {
+      const ds = state.detailedSets || {};
+      const splitDs = ds[split] || {};
+      const key = `${action.day}_${action.slot}`;
+      return { ...state, detailedSets: { ...ds, [split]: { ...splitDs, [key]: [...(splitDs[key]||[]), { reps:action.reps, kg:action.kg }] } } };
+    }
+    case "EDIT_SET_ENTRY": {
+      const ds = state.detailedSets || {};
+      const splitDs = ds[split] || {};
+      const key = `${action.day}_${action.slot}`;
+      const entries = [...(splitDs[key]||[])];
+      entries[action.index] = { reps:action.reps, kg:action.kg };
+      return { ...state, detailedSets: { ...ds, [split]: { ...splitDs, [key]: entries } } };
+    }
+    case "DELETE_SET_ENTRY": {
+      const ds = state.detailedSets || {};
+      const splitDs = ds[split] || {};
+      const key = `${action.day}_${action.slot}`;
+      const entries = (splitDs[key]||[]).filter((_,i) => i !== action.index);
+      return { ...state, detailedSets: { ...ds, [split]: { ...splitDs, [key]: entries } } };
+    }
+
+    case "CHECK":
+      if (sc.some(c=>c.day===action.day && c.slot===action.slot)) return state;
+      return { ...state, completions: { ...state.completions, [split]:[...sc,{day:action.day,slot:action.slot,id:action.id}] }};
+
+    case "UNCHECK":
+      return { ...state, completions: { ...state.completions, [split]:sc.filter(c=>!(c.day===action.day&&c.slot===action.slot)) }};
+
+    case "ADD_EXTRA": {
+      const ep = (state.extraPlan||{})[split]||{};
+      const dayExtras = ep[action.day]||[];
+      if (dayExtras.some(e=>e.id===action.id)) return state;
+      const usedSlots = dayExtras.map(e=>e.slot);
+      let slot=1000; while(usedSlots.includes(slot)) slot++;
+      return { ...state, extraPlan: { ...(state.extraPlan||{}), [split]: { ...ep, [action.day]: [...dayExtras,{slot,id:action.id}] } } };
+    }
+    case "REMOVE_EXTRA": {
+      const ep = (state.extraPlan||{})[split]||{};
+      const dayExtras = (ep[action.day]||[]).filter(e=>e.slot!==action.slot);
+      return { ...state,
+        extraPlan: { ...(state.extraPlan||{}), [split]: { ...ep, [action.day]: dayExtras } },
+        completions: { ...state.completions, [split]: sc.filter(c=>!(c.day===action.day&&c.slot===action.slot)) },
+      };
+    }
+    case "REMOVE_EXTRA_BY_ID": {
+      const ep = (state.extraPlan||{})[split]||{};
+      const dayExtras = ep[action.day]||[];
+      const removed = dayExtras.find(e=>e.id===action.id);
+      if (!removed) return state;
+      return { ...state,
+        extraPlan: { ...(state.extraPlan||{}), [split]: { ...ep, [action.day]: dayExtras.filter(e=>e.id!==action.id) } },
+        completions: { ...state.completions, [split]: sc.filter(c=>!(c.day===action.day&&c.slot===removed.slot)) },
+      };
+    }
+    case "UPDATE_MEASUREMENT":
+      return { ...state, measurements: { ...(state.measurements||{}), [action.key]: action.value } };
+    case "ADD_EXTRA_DAY":
+      return { ...state, extraDays: { ...(state.extraDays||{}), [action.split||split]: { enabled:true, title:action.title||"Extra Day" } } };
+    case "REMOVE_EXTRA_DAY":
+      return { ...state, extraDays: { ...(state.extraDays||{}), [action.split||split]: null } };
+
+    case "ADD_SET": {
+      const key = `${action.day}_${action.slot}`;
+      const cur = ss[key] || 0;
+      const next = cur >= action.target ? 0 : cur + 1;
+      return { ...state, setsLog: { ...state.setsLog, [split]: { ...ss, [key]: next } } };
+    }
+
+    case "HIDE_SLOT": {
+      const dayHidden = sh[action.day] || [];
+      if (dayHidden.includes(action.slot)) return state;
+      return { ...state, hiddenSlots: { ...state.hiddenSlots, [split]: { ...sh, [action.day]: [...dayHidden, action.slot] } } };
+    }
+
+    case "SHOW_SLOT": {
+      const dayHidden = sh[action.day] || [];
+      return { ...state, hiddenSlots: { ...state.hiddenSlots, [split]: { ...sh, [action.day]: dayHidden.filter(s=>s!==action.slot) } } };
+    }
+
+    case "UPGRADE_PRO":
+      return { ...state, isPro: true, planType: state.planType==='free' ? 'yearly' : state.planType };
+    case "SET_PLAN":
+      return { ...state, isPro: action.planType !== 'free', planType: action.planType };
+
+    case "SET_USER":
+      return { ...state, user: action.user };
+    case "LOAD_CLOUD": {
+      const { profile = {}, training = {} } = action;
+      const activeSplit = SPLITS[training.activeSplit] ? training.activeSplit : 'pushPull';
+      return {
+        ...INITIAL_STATE,
+        theme: state.theme,
+        activeSplit,
+        completions:   training.completions   || INITIAL_STATE.completions,
+        completedDays: training.completedDays || INITIAL_STATE.completedDays,
+        setsLog:       training.setsLog       || INITIAL_STATE.setsLog,
+        hiddenSlots:   training.hiddenSlots   || INITIAL_STATE.hiddenSlots,
+        extraPlan:     training.extraPlan     || INITIAL_STATE.extraPlan,
+        detailedSets:  training.detailedSets  || INITIAL_STATE.detailedSets,
+        customPlan:    training.customPlan    || { days:[] },
+        extraDays:     training.extraDays     || INITIAL_STATE.extraDays,
+        weekHistory:   training.weekHistory   || [],
+        bodyLog:       training.bodyLog       || [],
+        measurements:  training.measurements  || {},
+        isPro:         training.isPro         || false,
+        planType:      training.planType      || 'free',
+        detailedMode:  training.detailedMode  || false,
+        user:          profile,
+      };
+    }
+    case "SIGN_OUT":
+      return { ...INITIAL_STATE, theme: state.theme };
+
+    case "LOG_BODY_WEIGHT": {
+      const entry = { date: Date.now(), kg: action.kg };
+      return { ...state, bodyLog: [...(state.bodyLog||[]), entry] };
+    }
+
+    case "COMPLETE_DAY": {
+      const days = sd.includes(action.day) ? sd : [...sd, action.day];
+      const splitDays = split === 'custom' ? (state.customPlan?.days||[]) : (SPLITS[split]?.days||[]);
+      const newCompletedDays = { ...state.completedDays, [split]:days };
+      return { ...state, completedDays: newCompletedDays };
+    }
+
+    case "COMPLETE_WEEK": {
+      const ds = (state.detailedSets||{})[split] || {};
+      const weekEntry = { id: Date.now(), split, completedAt: Date.now(), completions: [...sc], setsLog: { ...ss }, detailedSets: { ...ds } };
+      return { ...state,
+        completions:   { ...state.completions,   [split]:[] },
+        completedDays: { ...state.completedDays, [split]:[] },
+        setsLog:       { ...state.setsLog,       [split]:{} },
+        hiddenSlots:   { ...state.hiddenSlots,   [split]:{} },
+        extraPlan:     { ...(state.extraPlan||{}), [split]:{} },
+        detailedSets:  { ...(state.detailedSets||{}), [split]:{} },
+        weekHistory:   [...(state.weekHistory||[]), weekEntry],
+      };
+    }
+
+    case "RESET_DAY": {
+      const newSets = { ...ss };
+      Object.keys(newSets).forEach(k => { if (k.startsWith(`${action.day}_`)) delete newSets[k]; });
+      const newHidden = { ...sh }; delete newHidden[action.day];
+      const newEP = { ...((state.extraPlan||{})[split]||{}) }; delete newEP[action.day];
+      const newDs = { ...((state.detailedSets||{})[split]||{}) };
+      Object.keys(newDs).forEach(k => { if (k.startsWith(`${action.day}_`)) delete newDs[k]; });
+      return { ...state,
+        completions:   { ...state.completions,   [split]:sc.filter(c=>c.day!==action.day) },
+        completedDays: { ...state.completedDays, [split]:sd.filter(d=>d!==action.day) },
+        setsLog:       { ...state.setsLog,       [split]:newSets },
+        hiddenSlots:   { ...state.hiddenSlots,   [split]:newHidden },
+        extraPlan:     { ...(state.extraPlan||{}), [split]:newEP },
+        detailedSets:  { ...(state.detailedSets||{}), [split]:newDs },
+      };
+    }
+
+    case "RESET_SPLIT":
+      return { ...state,
+        completions:   { ...state.completions,   [split]:[] },
+        completedDays: { ...state.completedDays, [split]:[] },
+        setsLog:       { ...state.setsLog,       [split]:{} },
+        hiddenSlots:   { ...state.hiddenSlots,   [split]:{} },
+        extraPlan:     { ...(state.extraPlan||{}), [split]:{} },
+        detailedSets:  { ...(state.detailedSets||{}), [split]:{} },
+      };
+
+    case "ADD_CUSTOM_DAY": {
+      const newDays = [...(state.customPlan?.days||[]), { title:action.title, sub:"", main:[], other:[] }];
+      return { ...state, customPlan: { ...state.customPlan, days:newDays } };
+    }
+
+    case "REMOVE_CUSTOM_DAY": {
+      const newDays = (state.customPlan?.days||[]).filter((_,i)=>i!==action.index);
+      return { ...state, customPlan: { ...state.customPlan, days:newDays } };
+    }
+
+    case "RENAME_CUSTOM_DAY": {
+      const newDays = (state.customPlan?.days||[]).map((d,i)=>i===action.index?{...d,title:action.title}:d);
+      return { ...state, customPlan: { ...state.customPlan, days:newDays } };
+    }
+
+    default: return state;
+  }
+}
+
+function App() {
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone===true;
+  const [state, dispatch] = useReducer(reducer, null, loadState);
+  useEffectApp(() => { localStorage.setItem("tl-state", JSON.stringify(state)); }, [state]);
+
+  // Restore Supabase session on mount
+  useEffectApp(() => {
+    sb.auth.getSession().then(({ data: { session } }) => {
+      if (!session) return;
+      if (state.user) return; // already loaded from localStorage
+      sb.from('user_data').select('profile,training').eq('user_id', session.user.id).maybeSingle().then(({ data: ud }) => {
+        if (ud?.training) dispatch({ type:'LOAD_CLOUD', profile: ud.profile || {}, training: ud.training });
+        else dispatch({ type:'SET_USER', user:{ email: session.user.email, ...(session.user.user_metadata || {}) } });
+      });
+    });
+    // Keep local state in sync when auth changes (e.g. email confirmation)
+    const { data: { subscription } } = sb.auth.onAuthStateChange((_event, session) => {
+      if (_event === 'SIGNED_OUT') dispatch({ type:'SIGN_OUT' });
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // Debounced cloud sync on state change
+  const syncTimer = useRefApp(null);
+  useEffectApp(() => {
+    if (!state.user) return;
+    clearTimeout(syncTimer.current);
+    syncTimer.current = setTimeout(async () => {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) return;
+      const { user, theme, ...training } = state;
+      const profile = { email: user?.email, name: user?.name, goal: user?.goal, experience: user?.experience, daysPerWeek: user?.daysPerWeek };
+      await sb.from('user_data').upsert({ user_id: session.user.id, profile, training, updated_at: new Date().toISOString() }, { onConflict: 'user_id' }).catch(() => {});
+    }, 2000);
+  }, [state]);
+
+  const handleSignOut = async () => {
+    await sb.auth.signOut();
+    dispatch({ type:'SIGN_OUT' });
+  };
+
+
+  const [route, setRoute] = useStateApp(() => {
+    try { const s=localStorage.getItem("tl-route"); if(s) return JSON.parse(s); } catch {}
+    return { screen:"home" };
+  });
+  useEffectApp(() => { localStorage.setItem("tl-route", JSON.stringify(route)); }, [route]);
+
+  const [tweaks, setTweaks] = useStateApp({ accent:"vermilion", typePair:"serif-geist" });
+  const [tweaksOn, setTweaksOn] = useStateApp(false);
+  useEffectApp(() => {
+    const ALLOWED_ORIGIN = window.location.origin;
+    const h = e => {
+      if (e.origin !== ALLOWED_ORIGIN && e.origin !== 'null') return;
+      if(e.data?.type==="__activate_edit_mode") setTweaksOn(true);
+      if(e.data?.type==="__deactivate_edit_mode") setTweaksOn(false);
+    };
+    window.addEventListener("message",h);
+    try { window.parent.postMessage({type:"__edit_mode_available"}, ALLOWED_ORIGIN); } catch(_) {}
+    return () => window.removeEventListener("message",h);
+  },[]);
+
+  const variant = state.theme || 'paper';
+  const v = VARIANTS[variant] || VARIANTS.paper;
+  const p = TYPE_PAIRS[tweaks.typePair]||TYPE_PAIRS["serif-geist"];
+  const cssVars = {
+    "--paper":v.paper,"--ink":v.ink,"--ink-60":v.ink60,"--ink-30":v.ink30,
+    "--rule":v.rule,"--accent":ACCENT_CHOICES[tweaks.accent]||ACCENT_CHOICES.vermilion,
+    "--accent-tint":v.accentTint,"--success":"oklch(0.52 0.12 150)",
+    "--font-display":p.display,"--font-body":p.body,"--font-mono":p.mono,
+    "--current-muted": variant==="ink" ? "rgba(0,0,0,0.45)" : "rgba(255,255,255,0.6)",
+    "--current-track":  variant==="ink" ? "rgba(0,0,0,0.12)" : "rgba(255,255,255,0.18)",
+  };
+
+  const [showPaywall, setShowPaywall] = useStateApp(false);
+  const navigate = r => setRoute(r);
+
+  const BottomNav = () => {
+    const tabs = [
+      { id:"home",      label:"Train",     icon:<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="9" width="16" height="2.5" rx="1.25" fill="currentColor"/><rect x="5" y="5.5" width="2.5" height="9" rx="1.25" fill="currentColor"/><rect x="12.5" y="5.5" width="2.5" height="9" rx="1.25" fill="currentColor"/></svg> },
+      { id:"analytics", label:"Analytics", icon:<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="12" width="3" height="5" rx="1" fill="currentColor"/><rect x="8.5" y="8" width="3" height="9" rx="1" fill="currentColor"/><rect x="14" y="4" width="3" height="13" rx="1" fill="currentColor"/></svg> },
+      { id:"profile",   label:"Profile",   icon:<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="currentColor" strokeWidth="1.6"/><path d="M3 18c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg> },
+    ];
+    return (
+      <div style={{ position:"fixed", bottom:0, left:0, right:0, zIndex:100, background:"var(--paper)", borderTop:"1px solid var(--rule)", display:"flex", paddingBottom:"env(safe-area-inset-bottom)" }}>
+        {tabs.map(t => {
+          const active = route.screen===t.id || (t.id==="home" && route.screen==="day");
+          return (
+            <button key={t.id} onClick={() => navigate({ screen:t.id })}
+              style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:4, padding:"10px 0 8px", background:"transparent", border:"none", cursor:"pointer", color:active?"var(--ink)":"var(--ink-60)", transition:"color 160ms" }}>
+              {t.icon}
+              <span style={{ fontFamily:"var(--font-mono)", fontSize:9, letterSpacing:0.18, textTransform:"uppercase" }}>{t.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const renderScreen = () => {
+    if (route.screen==="day")       return <DayScreen state={state} dispatch={dispatch} navigate={navigate} dayId={route.dayId} isPro={state.isPro} setShowPaywall={setShowPaywall}/>;
+    if (route.screen==="analytics") return <AnalyticsScreen state={state} dispatch={dispatch} navigate={navigate} setShowPaywall={setShowPaywall}/>;
+    if (route.screen==="profile")   return <ProfileScreen state={state} dispatch={dispatch} navigate={navigate} onSignOut={handleSignOut}/>;
+    if (route.screen==="auth")      return <AuthScreen state={state} dispatch={dispatch} navigate={navigate}/>;
+    return <Dashboard state={state} dispatch={dispatch} navigate={navigate} setShowPaywall={setShowPaywall}/>;
+  };
+
+  if (isStandalone) {
+    return (
+      <div style={{ minHeight:"100vh", background:"var(--paper)", color:"var(--ink)", paddingTop:"env(safe-area-inset-top)", ...cssVars }}>
+        <div style={{ paddingTop:12 }}>{renderScreen()}</div>
+        <BottomNav/>
+        {showPaywall && <PaywallModal onClose={()=>setShowPaywall(false)}/>}
+      </div>
+    );
+  }
+
+  return (
+    <div style={{
+      minHeight:"100vh",
+      background: variant==="ink"
+        ? "radial-gradient(ellipse at top,oklch(0.22 0.01 260),oklch(0.12 0.01 260))"
+        : "radial-gradient(ellipse at top,oklch(0.93 0.01 80),oklch(0.86 0.015 70))",
+      display:"flex", alignItems:"center", justifyContent:"center", padding:"40px 20px", ...cssVars,
+    }}>
+      <IOSDevice width={390} height={844} dark={variant==="ink"}>
+        <div style={{ minHeight:"100%", background:"var(--paper)", color:"var(--ink)", paddingTop:54, position:"relative" }}>
+          {renderScreen()}
+          <BottomNav/>
+          {showPaywall && <PaywallModal onClose={()=>setShowPaywall(false)}/>}
+        </div>
+      </IOSDevice>
+      {!tweaksOn && <div style={{ position:"fixed", bottom:20, left:20, fontFamily:"ui-monospace,monospace", fontSize:10, letterSpacing:0.14, textTransform:"uppercase", color:"var(--ink-30)", pointerEvents:"none" }}>Training Log</div>}
+    </div>
+  );
+}
+
+class ErrorBoundary extends React.Component {
+  constructor(p) { super(p); this.state = { err: null }; }
+  static getDerivedStateFromError(err) { return { err }; }
+  render() {
+    if (this.state.err) return (
+      <div style={{ padding:32, fontFamily:'system-ui', textAlign:'center' }}>
+        <div style={{ fontSize:22, fontWeight:600, marginBottom:12 }}>Something went wrong</div>
+        <div style={{ fontSize:13, color:'#666', marginBottom:24 }}>{String(this.state.err)}</div>
+        <button onClick={()=>this.setState({err:null})} style={{ padding:'10px 24px', background:'#111', color:'#fff', border:'none', cursor:'pointer', fontSize:13 }}>Try Again</button>
+      </div>
+    );
+    return this.props.children;
+  }
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<ErrorBoundary><App /></ErrorBoundary>);
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+}
+</script>
+
+</body>
+</html>
+
+
+
