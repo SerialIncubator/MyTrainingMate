@@ -1,8 +1,8 @@
-const CACHE = 'training-log-v35';
-const ASSETS = ['./', './index.html', './manifest.json', './icon-192px.png', './icon-512px.png'];
+const CACHE = 'mytrainingmate-v1';
+const ASSETS = ['./', './index.html', './manifest.json', './icon-192px.png', './icon-512px.png', './icon-1024.png'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).catch(err => console.warn('SW cache failed:', err)));
   self.skipWaiting();
 });
 self.addEventListener('activate', e => {
@@ -10,11 +10,10 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 self.addEventListener('fetch', e => {
-  // Network-first: always try network, fall back to cache only if offline
   e.respondWith(
     fetch(e.request).then(r => {
       const copy = r.clone();
-      caches.open(CACHE).then(c => c.put(e.request, copy));
+      caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});
       return r;
     }).catch(() => caches.match(e.request).then(r => r || caches.match('./index.html')))
   );
